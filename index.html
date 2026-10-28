@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proches aidants</title>
+<meta name="theme-color" content="#2f6f5e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<style>
+  :root { --vert:#2f6f5e; --fond:#f6f4ef; --carte:#fff; --texte:#222; --doux:#666; --alerte:#b54708; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:17px/1.4 system-ui, sans-serif; background:var(--fond); color:var(--texte); padding-bottom:80px; }
+  header { background:var(--vert); color:#fff; padding:14px 16px; font-size:20px; font-weight:600; }
+  main { padding:16px; max-width:640px; margin:auto; }
+  nav { position:fixed; bottom:0; left:0; right:0; display:flex; background:#fff; border-top:1px solid #ddd; }
+  nav button { flex:1; border:0; background:none; padding:8px 2px; font-size:12px; color:var(--doux); }
+  nav button span { display:block; font-size:22px; }
+  nav button.actif { color:var(--vert); font-weight:600; }
+  .carte { background:var(--carte); border-radius:12px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .carte b { display:block; }
+  .petit { color:var(--doux); font-size:15px; }
+  .alerte { color:var(--alerte); font-weight:600; }
+  .boutons { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  button.btn { border:0; border-radius:10px; padding:10px 14px; font-size:16px; background:#e7efe9; color:var(--vert); }
+  button.btn.plein { background:var(--vert); color:#fff; }
+  button.btn.danger { background:#fbeaea; color:#a12; }
+  label { display:block; margin:10px 0 4px; font-weight:600; }
+  input, textarea, select { width:100%; font:inherit; padding:10px; border:1px solid #ccc; border-radius:8px; background:#fff; }
+  dialog { border:0; border-radius:14px; width:min(92vw,480px); padding:16px; }
+  dialog::backdrop { background:rgba(0,0,0,.4); }
+  h2 { margin:4px 0 12px; font-size:20px; }
+  .vide { color:var(--doux); text-align:center; padding:24px 0; }
+</style>
+</head>
+<body>
+<header id="titre">Proches aidants</header>
+<main id="page"></main>
+<nav id="menu"></nav>
+<dialog id="dlg"></dialog>
+
+<script>
+// shortcut: données dans localStorage (sur le téléphone seulement), passer à un serveur si on veut partager en ligne.
+const CLE = 'proches-aidants';
+let d = JSON.parse(localStorage.getItem(CLE) || 'null') || { aide:{}, meds:[], rdv:[], taches:[], famille:[] };
+const sauver = () => localStorage.setItem(CLE, JSON.stringify(d));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+const nomAide = () => d.aide.nom || 'la personne aidée';
+const nomDe = id => (d.famille.find(p => p.id === id) || {}).nom;
+const dateFr = s => s ? new Date(s).toLocaleString('fr-CA', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }) : '';
+const jourFr = s => s ? new Date(s + 'T12:00').toLocaleDateString('fr-CA', { day:'numeric', month:'long' }) : '';
+const dansJours = (s, n) => s && (new Date(s) - Date.now()) < n * 864e5;
+
+// Chaque liste est décrite une fois ; le même code affiche, ajoute et modifie.
+const LISTES = {
+  meds:    { titre:'Médicaments', champs:[['nom','Nom du médicament'],['dose','Dose'],['heure','Quand le prendre'],['renouv','Date de renouvellement','date']],
+             ligne: m => `<b>${esc(m.nom)}</b><span class="petit">${esc(m.dose)} · ${esc(m.heure)}</span>` +
+               (m.renouv ? `<div class="${dansJours(m.renouv, 7) ? 'alerte' : 'petit'}">Renouveler le ${jourFr(m.renouv)}</div>` : '') },
+  rdv:     { titre:'Rendez-vous', champs:[['quoi','Rendez-vous (ex. : cardiologue)'],['quand','Date et heure','datetime-local'],['lieu','Lieu'],['qui','Qui s\'en occupe','qui']],
+             ligne: r => `<b>${esc(r.quoi)}</b><span class="petit">${dateFr(r.quand)}<br>${esc(r.lieu)}</span>` + qui(r),
+             message: (r, p) => `Bonjour ${p.nom}, ${nomAide()} a un rendez-vous : ${r.quoi}, ${dateFr(r.quand)}${r.lieu ? ', à ' + r.lieu : ''}. Peux-tu t'en occuper ? Réponds-moi par texto. Merci !` },
+  taches:  { titre:'Tâches', champs:[['quoi','Tâche (ex. : épicerie)'],['qui','Qui s\'en occupe','qui']],
+             ligne: t => `<b>${esc(t.quoi)}</b>` + qui(t),
+             message: (t, p) => `Bonjour ${p.nom}, peux-tu t'occuper de : ${t.quoi}, pour ${nomAide()} ? Réponds-moi par texto. Merci !` },
+  famille: { titre:'Famille', champs:[['nom','Nom'],['tel','Numéro de téléphone','tel']],
+             ligne: p => `<b>${esc(p.nom)}</b><span class="petit">${esc(p.tel)}</span>` },
+};
+const qui = x => `<div class="${x.qui ? 'petit' : 'alerte'}">${x.qui ? '✅ ' + esc(nomDe(x.qui) || '') + " s'en occupe" : 'Personne encore'}</div>`;
+
+const ONGLETS = [['accueil','🏠','Accueil'],['meds','💊','Médicaments'],['rdv','📅','Rendez-vous'],['taches','✅','Tâches'],['famille','👪','Famille']];
+let onglet = 'accueil';
+
+function afficher() {
+  $('menu').innerHTML = ONGLETS.map(([id, ico, txt]) => `<button class="${id === onglet ? 'actif' : ''}" onclick="onglet='${id}';afficher()"><span>${ico}</span>${txt}</button>`).join('');
+  $('page').innerHTML = onglet === 'accueil' ? accueil() : liste(onglet);
+}
+
+function accueil() {
+  const a = d.aide;
+  const rdv = d.rdv.filter(r => r.quand && new Date(r.quand) > Date.now() - 36e5 && dansJours(r.quand, 7)).sort((x, y) => x.quand.localeCompare(y.quand));
+  const meds = d.meds.filter(m => dansJours(m.renouv, 7));
+  const libres = d.taches.filter(t => !t.qui);
+  const avenir = [
+    ...rdv.map(r => `<div class="carte">📅 ${LISTES.rdv.ligne(r)}</div>`),
+    ...meds.map(m => `<div class="carte">💊 <b>Renouveler ${esc(m.nom)}</b><span class="alerte">le ${jourFr(m.renouv)}</span></div>`),
+    ...libres.map(t => `<div class="carte">✅ ${LISTES.taches.ligne(t)}</div>`),
+  ].join('');
+  return `<div class="carte"><h2>${esc(a.nom || 'Personne aidée')}</h2>
+      ${a.medecin ? `<div><span class="petit">Médecin :</span> ${esc(a.medecin)}</div>` : ''}
+      ${a.ramq ? `<div><span class="petit">Assurance maladie :</span> ${esc(a.ramq)}</div>` : ''}
+      ${a.notes ? `<div class="petit" style="white-space:pre-wrap">${esc(a.notes)}</div>` : ''}
+      <div class="boutons"><button class="btn" onclick="ficheAide()">Modifier la fiche</button></div></div>
+    <h2>Cette semaine</h2>${avenir || '<div class="vide">Rien à prévoir cette semaine.</div>'}`;
+}
+
+function liste(nom) {
+  const L = LISTES[nom];
+  const items = d[nom].map(x => `<div class="carte">${L.ligne(x)}<div class="boutons">
+      ${L.message ? `<button class="btn plein" onclick="demander('${nom}','${x.id}')">📱 Demander de l'aide</button>` : ''}
+      <button class="btn" onclick="formulaire('${nom}','${x.id}')">Modifier</button></div></div>`).join('');
+  const contacts = nom === 'famille' && 'contacts' in navigator ? `<button class="btn plein" onclick="depuisContacts()">Choisir dans mes contacts</button>` : '';
+  return `<h2>${L.titre}</h2>${items || '<div class="vide">Rien pour l\'instant.</div>'}
+    <div class="boutons">${contacts}<button class="btn ${contacts ? '' : 'plein'}" onclick="formulaire('${nom}')">+ Ajouter</button></div>`;
+}
+
+function champ([cle, txt, type], val) {
+  if (type === 'qui') return `<label>${txt}</label><select name="${cle}"><option value="">Personne encore</option>` +
+    d.famille.map(p => `<option value="${p.id}" ${p.id === val ? 'selected' : ''}>${esc(p.nom)}</option>`).join('') + `</select>`;
+  if (type === 'textarea') return `<label>${txt}</label><textarea name="${cle}" rows="4">${esc(val)}</textarea>`;
+  return `<label>${txt}</label><input name="${cle}" type="${type || 'text'}" value="${esc(val)}">`;
+}
+
+function ouvrir(html, auSubmit) {
+  $('dlg').innerHTML = `<form method="dialog">${html}<div class="boutons" style="margin-top:16px">
+    <button class="btn plein" value="ok">Enregistrer</button><button class="btn" value="annuler" formnovalidate>Annuler</button></div></form>`;
+  const f = $('dlg').querySelector('form');
+  f.onsubmit = e => { if (e.submitter?.value === 'ok') { auSubmit(Object.fromEntries(new FormData(f))); sauver(); afficher(); } };
+  $('dlg').showModal();
+}
+
+function formulaire(nom, id) {
+  const L = LISTES[nom], x = d[nom].find(y => y.id === id) || {};
+  ouvrir(`<h2>${id ? 'Modifier' : 'Ajouter'}</h2>` + L.champs.map(c => champ(c, x[c[0]])).join('') +
+    (id ? `<div class="boutons" style="margin-top:12px"><button type="button" class="btn danger" onclick="supprimer('${nom}','${id}')">Supprimer</button></div>` : ''),
+    v => id ? Object.assign(x, v) : d[nom].push({ id: Date.now().toString(36), ...v }));
+  $('dlg').querySelector('input,select').required = true;
+}
+
+function supprimer(nom, id) {
+  if (!confirm('Supprimer pour de bon ?')) return;
+  d[nom] = d[nom].filter(x => x.id !== id);
+  sauver(); $('dlg').close(); afficher();
+}
+
+function ficheAide() {
+  ouvrir('<h2>Personne aidée</h2>' + [['nom','Nom'],['medecin','Médecin et téléphone'],['ramq','Numéro d\'assurance maladie'],['notes','Notes (allergies, etc.)','textarea']]
+    .map(c => champ(c, d.aide[c[0]])).join(''), v => d.aide = v);
+}
+
+// Le texto part du téléphone de la personne principale : gratuit avec son forfait.
+function demander(nom, id) {
+  const x = d[nom].find(y => y.id === id);
+  if (!d.famille.length) { alert('Ajoute d\'abord une personne dans l\'onglet Famille.'); return; }
+  $('dlg').innerHTML = `<h2>À qui demander ?</h2>` + d.famille.map(p =>
+    `<div class="carte"><b>${esc(p.nom)}</b><div class="boutons"><a class="btn plein" style="text-decoration:none;display:inline-block;border-radius:10px;padding:10px 14px"
+      href="sms:${encodeURIComponent(p.tel)}?body=${encodeURIComponent(LISTES[nom].message(x, p))}">📱 Texter</a></div></div>`).join('') +
+    `<p class="petit">Quand la personne te répond oui, choisis son nom dans « Qui s'en occupe ».</p>
+    <div class="boutons"><button class="btn" onclick="$('dlg').close()">Fermer</button></div>`;
+  $('dlg').showModal();
+}
+
+async function depuisContacts() {
+  try {
+    const choix = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+    choix.forEach(c => c.tel?.[0] && d.famille.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), nom: c.name?.[0] || c.tel[0], tel: c.tel[0] }));
+    sauver(); afficher();
+  } catch { /* la personne a annulé */ }
+}
+
+afficher();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
