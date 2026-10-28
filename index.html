@@ -4,116 +4,201 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proches aidants</title>
-<meta name="theme-color" content="#2f6f5e">
+<meta name="theme-color" content="#ff6b6b">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root { --vert:#2f6f5e; --fond:#f6f4ef; --carte:#fff; --texte:#222; --doux:#666; --alerte:#b54708; }
-  * { box-sizing:border-box; }
-  body { margin:0; font:17px/1.4 system-ui, sans-serif; background:var(--fond); color:var(--texte); padding-bottom:80px; }
-  header { background:var(--vert); color:#fff; padding:14px 16px; font-size:20px; font-weight:600; }
-  main { padding:16px; max-width:640px; margin:auto; }
-  nav { position:fixed; bottom:0; left:0; right:0; display:flex; background:#fff; border-top:1px solid #ddd; }
-  nav button { flex:1; border:0; background:none; padding:8px 2px; font-size:12px; color:var(--doux); }
-  nav button span { display:block; font-size:22px; }
-  nav button.actif { color:var(--vert); font-weight:600; }
-  .carte { background:var(--carte); border-radius:12px; padding:12px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
-  .carte b { display:block; }
-  .petit { color:var(--doux); font-size:15px; }
-  .alerte { color:var(--alerte); font-weight:600; }
-  .boutons { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-  button.btn { border:0; border-radius:10px; padding:10px 14px; font-size:16px; background:#e7efe9; color:var(--vert); }
-  button.btn.plein { background:var(--vert); color:#fff; }
-  button.btn.danger { background:#fbeaea; color:#a12; }
-  label { display:block; margin:10px 0 4px; font-weight:600; }
-  input, textarea, select { width:100%; font:inherit; padding:10px; border:1px solid #ccc; border-radius:8px; background:#fff; }
-  dialog { border:0; border-radius:14px; width:min(92vw,480px); padding:16px; }
-  dialog::backdrop { background:rgba(0,0,0,.4); }
-  h2 { margin:4px 0 12px; font-size:20px; }
-  .vide { color:var(--doux); text-align:center; padding:24px 0; }
+  :root {
+    --corail:#ff6b6b; --orange:#ffa94d; --jaune:#ffd43b; --menthe:#38d9a9; --bleu:#4dabf7; --mauve:#9775fa;
+    --fond:#fff8f0; --texte:#2b2140; --doux:#7a7090;
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; font:600 17px/1.4 Nunito, system-ui, sans-serif; background:var(--fond); color:var(--texte); padding-bottom:96px; }
+  header { background:linear-gradient(135deg, var(--corail), var(--orange)); color:#fff; padding:22px 18px 56px; border-radius:0 0 32px 32px; position:relative; overflow:hidden; }
+  header::after { content:''; position:absolute; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.15); right:-50px; top:-60px; }
+  header .haut { display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1; }
+  header .app { font-weight:900; font-size:15px; opacity:.9; letter-spacing:.5px; }
+  #langue { border:2px solid rgba(255,255,255,.7); background:none; color:#fff; border-radius:20px; padding:4px 12px; font:800 14px Nunito, sans-serif; }
+  header h1 { margin:14px 0 0; font-size:26px; font-weight:900; position:relative; z-index:1; }
+  header p { margin:4px 0 0; opacity:.95; position:relative; z-index:1; }
+  main { padding:0 16px; max-width:640px; margin:-36px auto 0; position:relative; }
+  nav { position:fixed; bottom:12px; left:12px; right:12px; display:flex; background:#fff; border-radius:24px; padding:6px; box-shadow:0 8px 24px rgba(43,33,64,.15); max-width:616px; margin:auto; }
+  nav button { flex:1; border:0; background:none; padding:6px 2px; font:700 11px Nunito, sans-serif; color:var(--doux); border-radius:18px; transition:.2s; }
+  nav button span { display:block; font-size:24px; transition:transform .2s; }
+  nav button.actif { background:#fff0e6; color:var(--corail); }
+  nav button.actif span { transform:scale(1.2) translateY(-2px); }
+  .carte { background:#fff; border-radius:20px; padding:14px 16px; margin-bottom:12px; box-shadow:0 4px 14px rgba(43,33,64,.07); display:flex; gap:12px; align-items:flex-start; animation:entre .35s ease both; }
+  .carte .corps { flex:1; min-width:0; }
+  .carte b { display:block; font-size:18px; font-weight:800; }
+  .bulle { flex:none; width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; }
+  .avatar { flex:none; width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-weight:900; color:#fff; font-size:20px; }
+  .meds .bulle { background:#ffe3e3; } .rdv .bulle { background:#e7f5ff; } .taches .bulle { background:#e6fcf5; }
+  .petit { color:var(--doux); font-size:15px; display:block; }
+  .pastille { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:20px; font-size:14px; font-weight:800; }
+  .pastille.ok { background:#e6fcf5; color:#0c8a66; }
+  .pastille.alerte { background:#fff4e6; color:#d9480f; }
+  .boutons { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .btn { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:#f3f0ff; color:var(--mauve); text-decoration:none; display:inline-block; cursor:pointer; transition:transform .1s; }
+  .btn:active { transform:scale(.95); }
+  .btn.plein { background:linear-gradient(135deg, var(--corail), var(--orange)); color:#fff; box-shadow:0 4px 12px rgba(255,107,107,.35); }
+  .btn.danger { background:#fff0f0; color:#e03131; }
+  .fiche { flex-direction:column; gap:4px; background:linear-gradient(135deg, #fff, #fff4e6); }
+  .fiche h2 { margin:0 0 4px; font-size:22px; font-weight:900; }
+  h2.section { font-size:21px; font-weight:900; margin:22px 4px 12px; }
+  label { display:block; margin:12px 0 4px; font-weight:800; }
+  input, textarea, select { width:100%; font:600 16px Nunito, sans-serif; padding:12px; border:2px solid #f0e6dc; border-radius:14px; background:#fffcf8; color:var(--texte); }
+  input:focus, textarea:focus, select:focus { outline:none; border-color:var(--orange); }
+  dialog { border:0; border-radius:26px; width:min(92vw,480px); padding:20px; max-height:90vh; }
+  dialog[open] { animation:monte .25s ease; }
+  dialog::backdrop { background:rgba(43,33,64,.45); }
+  dialog h2 { margin:0 0 6px; font-size:22px; font-weight:900; }
+  .vide { text-align:center; padding:28px 16px; color:var(--doux); background:#fff; border-radius:20px; }
+  .vide span { font-size:44px; display:block; margin-bottom:6px; }
+  .ajouter { position:fixed; right:22px; bottom:100px; width:60px; height:60px; border-radius:50%; border:0; font-size:32px; color:#fff;
+    background:linear-gradient(135deg, var(--mauve), var(--bleu)); box-shadow:0 8px 20px rgba(151,117,250,.45); cursor:pointer; }
+  @keyframes entre { from { opacity:0; transform:translateY(10px); } }
+  @keyframes monte { from { opacity:0; transform:translateY(30px) scale(.97); } }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
 </style>
 </head>
 <body>
-<header id="titre">Proches aidants</header>
+<header>
+  <div class="haut"><span class="app" id="nomApp"></span><button id="langue" onclick="changerLangue()"></button></div>
+  <h1 id="titre"></h1><p id="sousTitre"></p>
+</header>
 <main id="page"></main>
 <nav id="menu"></nav>
 <dialog id="dlg"></dialog>
 
 <script>
+const NOM_APP = 'Proches aidants'; // à remplacer quand le nom sera choisi
 // shortcut: données dans localStorage (sur le téléphone seulement), passer à un serveur si on veut partager en ligne.
 const CLE = 'proches-aidants';
 let d = JSON.parse(localStorage.getItem(CLE) || 'null') || { aide:{}, meds:[], rdv:[], taches:[], famille:[] };
+let lang = localStorage.getItem(CLE + '-lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
 const sauver = () => localStorage.setItem(CLE, JSON.stringify(d));
+
+const TXT = {
+  fr: {
+    autre:'EN', accueil:'Accueil', meds:'Médicaments', rdv:'Rendez-vous', taches:'Tâches', famille:'Famille',
+    bonjour:'Bonjour ! 👋', semaineDe: n => `Voici la semaine de ${n}`, laPersonne:'la personne aidée', personneAidee:'Personne aidée',
+    medecin:'Médecin', ramq:'Assurance maladie', modifierFiche:'Modifier la fiche', cetteSemaine:'Cette semaine',
+    rienSemaine:'Semaine tranquille ! Rien à prévoir.', rien:'Rien pour l\'instant. Appuie sur + pour commencer !',
+    nomMed:'Nom du médicament', dose:'Dose', heure:'Quand le prendre', renouv:'Date de renouvellement', renouveler:'Renouveler le',
+    quoiRdv:'Rendez-vous (ex. : cardiologue)', quand:'Date et heure', lieu:'Lieu', qui:'Qui s\'en occupe', personne:'Personne encore',
+    sOccupe: n => `${n} s'en occupe`, quoiTache:'Tâche (ex. : épicerie)', nom:'Nom', tel:'Numéro de téléphone',
+    demander:'📱 Demander de l\'aide', modifier:'Modifier', contacts:'👥 Choisir dans mes contacts', ajouter:'Ajouter',
+    enregistrer:'Enregistrer', annuler:'Annuler', supprimer:'Supprimer', confirmer:'Supprimer pour de bon ?', fermer:'Fermer',
+    aQui:'À qui demander ?', texter:'📱 Texter', apres:'Quand la personne te répond oui, choisis son nom dans « Qui s\'en occupe ».',
+    familleVide:'Ajoute d\'abord une personne dans l\'onglet Famille.', medecinTel:'Médecin et téléphone', numRamq:'Numéro d\'assurance maladie', notes:'Notes (allergies, etc.)',
+    msgRdv: (p, a, r, quand) => `Bonjour ${p}, ${a} a un rendez-vous : ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Peux-tu t'en occuper ? Réponds-moi par texto. Merci !`,
+    msgTache: (p, a, t) => `Bonjour ${p}, peux-tu t'occuper de : ${t.quoi}, pour ${a} ? Réponds-moi par texto. Merci !`,
+  },
+  en: {
+    autre:'FR', accueil:'Home', meds:'Meds', rdv:'Appointments', taches:'Tasks', famille:'Family',
+    bonjour:'Hi there! 👋', semaineDe: n => `Here's ${n}'s week`, laPersonne:'your loved one', personneAidee:'Loved one',
+    medecin:'Doctor', ramq:'Health card', modifierFiche:'Edit profile', cetteSemaine:'This week',
+    rienSemaine:'A quiet week! Nothing planned.', rien:'Nothing yet. Tap + to get started!',
+    nomMed:'Medication name', dose:'Dose', heure:'When to take it', renouv:'Refill date', renouveler:'Refill on',
+    quoiRdv:'Appointment (e.g. cardiologist)', quand:'Date and time', lieu:'Place', qui:'Who\'s taking care of it', personne:'Nobody yet',
+    sOccupe: n => `${n} is on it`, quoiTache:'Task (e.g. groceries)', nom:'Name', tel:'Phone number',
+    demander:'📱 Ask for help', modifier:'Edit', contacts:'👥 Pick from my contacts', ajouter:'Add',
+    enregistrer:'Save', annuler:'Cancel', supprimer:'Delete', confirmer:'Delete for good?', fermer:'Close',
+    aQui:'Who should I ask?', texter:'📱 Text', apres:'When they reply yes, pick their name under "Who\'s taking care of it".',
+    familleVide:'First add someone in the Family tab.', medecinTel:'Doctor and phone', numRamq:'Health card number', notes:'Notes (allergies, etc.)',
+    msgRdv: (p, a, r, quand) => `Hi ${p}, ${a} has an appointment: ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Can you take care of it? Text me back. Thanks!`,
+    msgTache: (p, a, t) => `Hi ${p}, can you take care of: ${t.quoi}, for ${a}? Text me back. Thanks!`,
+  },
+};
+const t = k => TXT[lang][k];
+const locale = () => lang === 'fr' ? 'fr-CA' : 'en-CA';
+
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
-const nomAide = () => d.aide.nom || 'la personne aidée';
+const nomAide = () => d.aide.nom || t('laPersonne');
 const nomDe = id => (d.famille.find(p => p.id === id) || {}).nom;
-const dateFr = s => s ? new Date(s).toLocaleString('fr-CA', { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }) : '';
-const jourFr = s => s ? new Date(s + 'T12:00').toLocaleDateString('fr-CA', { day:'numeric', month:'long' }) : '';
+const dateFr = s => s ? new Date(s).toLocaleString(locale(), { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }) : '';
+const jourFr = s => s ? new Date(s + 'T12:00').toLocaleDateString(locale(), { day:'numeric', month:'long' }) : '';
 const dansJours = (s, n) => s && (new Date(s) - Date.now()) < n * 864e5;
+const COULEURS = ['#ff6b6b','#ffa94d','#38d9a9','#4dabf7','#9775fa','#f783ac'];
+const avatar = p => `<div class="avatar" style="background:${COULEURS[parseInt(p.id, 36) % COULEURS.length]}">${esc((p.nom || '?')[0].toUpperCase())}</div>`;
 
 // Chaque liste est décrite une fois ; le même code affiche, ajoute et modifie.
 const LISTES = {
-  meds:    { titre:'Médicaments', champs:[['nom','Nom du médicament'],['dose','Dose'],['heure','Quand le prendre'],['renouv','Date de renouvellement','date']],
-             ligne: m => `<b>${esc(m.nom)}</b><span class="petit">${esc(m.dose)} · ${esc(m.heure)}</span>` +
-               (m.renouv ? `<div class="${dansJours(m.renouv, 7) ? 'alerte' : 'petit'}">Renouveler le ${jourFr(m.renouv)}</div>` : '') },
-  rdv:     { titre:'Rendez-vous', champs:[['quoi','Rendez-vous (ex. : cardiologue)'],['quand','Date et heure','datetime-local'],['lieu','Lieu'],['qui','Qui s\'en occupe','qui']],
-             ligne: r => `<b>${esc(r.quoi)}</b><span class="petit">${dateFr(r.quand)}<br>${esc(r.lieu)}</span>` + qui(r),
-             message: (r, p) => `Bonjour ${p.nom}, ${nomAide()} a un rendez-vous : ${r.quoi}, ${dateFr(r.quand)}${r.lieu ? ', à ' + r.lieu : ''}. Peux-tu t'en occuper ? Réponds-moi par texto. Merci !` },
-  taches:  { titre:'Tâches', champs:[['quoi','Tâche (ex. : épicerie)'],['qui','Qui s\'en occupe','qui']],
-             ligne: t => `<b>${esc(t.quoi)}</b>` + qui(t),
-             message: (t, p) => `Bonjour ${p.nom}, peux-tu t'occuper de : ${t.quoi}, pour ${nomAide()} ? Réponds-moi par texto. Merci !` },
-  famille: { titre:'Famille', champs:[['nom','Nom'],['tel','Numéro de téléphone','tel']],
+  meds:    { ico:'💊', champs:[['nom','nomMed'],['dose','dose'],['heure','heure'],['renouv','renouv','date']],
+             ligne: m => `<b>${esc(m.nom)}</b><span class="petit">${esc([m.dose, m.heure].filter(Boolean).join(' · '))}</span>` +
+               (m.renouv ? `<span class="pastille ${dansJours(m.renouv, 7) ? 'alerte' : 'ok'}">🔄 ${t('renouveler')} ${jourFr(m.renouv)}</span>` : '') },
+  rdv:     { ico:'📅', champs:[['quoi','quoiRdv'],['quand','quand','datetime-local'],['lieu','lieu'],['qui','qui','qui']],
+             ligne: r => `<b>${esc(r.quoi)}</b><span class="petit">${dateFr(r.quand)}${r.lieu ? '<br>📍 ' + esc(r.lieu) : ''}</span>` + qui(r),
+             message: (r, p) => t('msgRdv')(p.nom, nomAide(), r, dateFr(r.quand)) },
+  taches:  { ico:'✅', champs:[['quoi','quoiTache'],['qui','qui','qui']],
+             ligne: x => `<b>${esc(x.quoi)}</b>` + qui(x),
+             message: (x, p) => t('msgTache')(p.nom, nomAide(), x) },
+  famille: { ico:'👪', champs:[['nom','nom'],['tel','tel','tel']],
              ligne: p => `<b>${esc(p.nom)}</b><span class="petit">${esc(p.tel)}</span>` },
 };
-const qui = x => `<div class="${x.qui ? 'petit' : 'alerte'}">${x.qui ? '✅ ' + esc(nomDe(x.qui) || '') + " s'en occupe" : 'Personne encore'}</div>`;
+const qui = x => x.qui ? `<span class="pastille ok">🙌 ${esc(t('sOccupe')(nomDe(x.qui) || ''))}</span>` : `<span class="pastille alerte">🙋 ${t('personne')}</span>`;
 
-const ONGLETS = [['accueil','🏠','Accueil'],['meds','💊','Médicaments'],['rdv','📅','Rendez-vous'],['taches','✅','Tâches'],['famille','👪','Famille']];
+const ONGLETS = [['accueil','🏡'],['meds','💊'],['rdv','📅'],['taches','✅'],['famille','👪']];
 let onglet = 'accueil';
 
+function carte(nom, x, boutons = '') {
+  const icone = nom === 'famille' ? avatar(x) : `<div class="bulle">${LISTES[nom].ico}</div>`;
+  return `<div class="carte ${nom}">${icone}<div class="corps">${LISTES[nom].ligne(x)}${boutons}</div></div>`;
+}
+
 function afficher() {
-  $('menu').innerHTML = ONGLETS.map(([id, ico, txt]) => `<button class="${id === onglet ? 'actif' : ''}" onclick="onglet='${id}';afficher()"><span>${ico}</span>${txt}</button>`).join('');
+  document.documentElement.lang = locale();
+  $('nomApp').textContent = NOM_APP;
+  $('langue').textContent = t('autre');
+  $('titre').textContent = onglet === 'accueil' ? t('bonjour') : LISTES[onglet].ico + ' ' + t(onglet);
+  $('sousTitre').textContent = onglet === 'accueil' ? t('semaineDe')(nomAide()) : '';
+  $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id)}</button>`).join('');
   $('page').innerHTML = onglet === 'accueil' ? accueil() : liste(onglet);
+}
+
+function changerLangue() {
+  lang = lang === 'fr' ? 'en' : 'fr';
+  localStorage.setItem(CLE + '-lang', lang);
+  afficher();
 }
 
 function accueil() {
   const a = d.aide;
   const rdv = d.rdv.filter(r => r.quand && new Date(r.quand) > Date.now() - 36e5 && dansJours(r.quand, 7)).sort((x, y) => x.quand.localeCompare(y.quand));
   const meds = d.meds.filter(m => dansJours(m.renouv, 7));
-  const libres = d.taches.filter(t => !t.qui);
-  const avenir = [
-    ...rdv.map(r => `<div class="carte">📅 ${LISTES.rdv.ligne(r)}</div>`),
-    ...meds.map(m => `<div class="carte">💊 <b>Renouveler ${esc(m.nom)}</b><span class="alerte">le ${jourFr(m.renouv)}</span></div>`),
-    ...libres.map(t => `<div class="carte">✅ ${LISTES.taches.ligne(t)}</div>`),
-  ].join('');
-  return `<div class="carte"><h2>${esc(a.nom || 'Personne aidée')}</h2>
-      ${a.medecin ? `<div><span class="petit">Médecin :</span> ${esc(a.medecin)}</div>` : ''}
-      ${a.ramq ? `<div><span class="petit">Assurance maladie :</span> ${esc(a.ramq)}</div>` : ''}
-      ${a.notes ? `<div class="petit" style="white-space:pre-wrap">${esc(a.notes)}</div>` : ''}
-      <div class="boutons"><button class="btn" onclick="ficheAide()">Modifier la fiche</button></div></div>
-    <h2>Cette semaine</h2>${avenir || '<div class="vide">Rien à prévoir cette semaine.</div>'}`;
+  const libres = d.taches.filter(x => !x.qui);
+  const avenir = [...rdv.map(r => carte('rdv', r)), ...meds.map(m => carte('meds', m)), ...libres.map(x => carte('taches', x))].join('');
+  return `<div class="carte fiche"><h2>💛 ${esc(a.nom || t('personneAidee'))}</h2>
+      ${a.medecin ? `<div><span class="petit" style="display:inline">🩺 ${t('medecin')} :</span> ${esc(a.medecin)}</div>` : ''}
+      ${a.ramq ? `<div><span class="petit" style="display:inline">🪪 ${t('ramq')} :</span> ${esc(a.ramq)}</div>` : ''}
+      ${a.notes ? `<div class="petit" style="white-space:pre-wrap">📝 ${esc(a.notes)}</div>` : ''}
+      <div class="boutons"><button class="btn" onclick="ficheAide()">✏️ ${t('modifierFiche')}</button></div></div>
+    <h2 class="section">${t('cetteSemaine')}</h2>${avenir || `<div class="vide"><span>🌤️</span>${t('rienSemaine')}</div>`}`;
 }
 
 function liste(nom) {
   const L = LISTES[nom];
-  const items = d[nom].map(x => `<div class="carte">${L.ligne(x)}<div class="boutons">
-      ${L.message ? `<button class="btn plein" onclick="demander('${nom}','${x.id}')">📱 Demander de l'aide</button>` : ''}
-      <button class="btn" onclick="formulaire('${nom}','${x.id}')">Modifier</button></div></div>`).join('');
-  const contacts = nom === 'famille' && 'contacts' in navigator ? `<button class="btn plein" onclick="depuisContacts()">Choisir dans mes contacts</button>` : '';
-  return `<h2>${L.titre}</h2>${items || '<div class="vide">Rien pour l\'instant.</div>'}
-    <div class="boutons">${contacts}<button class="btn ${contacts ? '' : 'plein'}" onclick="formulaire('${nom}')">+ Ajouter</button></div>`;
+  const items = d[nom].map(x => carte(nom, x, `<div class="boutons">
+      ${L.message ? `<button class="btn plein" onclick="demander('${nom}','${x.id}')">${t('demander')}</button>` : ''}
+      <button class="btn" onclick="formulaire('${nom}','${x.id}')">${t('modifier')}</button></div>`)).join('');
+  const contacts = nom === 'famille' && 'contacts' in navigator ? `<div class="boutons" style="margin-bottom:12px"><button class="btn plein" onclick="depuisContacts()">${t('contacts')}</button></div>` : '';
+  return contacts + (items || `<div class="vide"><span>${L.ico}</span>${t('rien')}</div>`) +
+    `<button class="ajouter" aria-label="${t('ajouter')}" onclick="formulaire('${nom}')">+</button>`;
 }
 
 function champ([cle, txt, type], val) {
-  if (type === 'qui') return `<label>${txt}</label><select name="${cle}"><option value="">Personne encore</option>` +
+  if (type === 'qui') return `<label>${t(txt)}</label><select name="${cle}"><option value="">${t('personne')}</option>` +
     d.famille.map(p => `<option value="${p.id}" ${p.id === val ? 'selected' : ''}>${esc(p.nom)}</option>`).join('') + `</select>`;
-  if (type === 'textarea') return `<label>${txt}</label><textarea name="${cle}" rows="4">${esc(val)}</textarea>`;
-  return `<label>${txt}</label><input name="${cle}" type="${type || 'text'}" value="${esc(val)}">`;
+  if (type === 'textarea') return `<label>${t(txt)}</label><textarea name="${cle}" rows="4">${esc(val)}</textarea>`;
+  return `<label>${t(txt)}</label><input name="${cle}" type="${type || 'text'}" value="${esc(val)}">`;
 }
 
 function ouvrir(html, auSubmit) {
-  $('dlg').innerHTML = `<form method="dialog">${html}<div class="boutons" style="margin-top:16px">
-    <button class="btn plein" value="ok">Enregistrer</button><button class="btn" value="annuler" formnovalidate>Annuler</button></div></form>`;
+  $('dlg').innerHTML = `<form method="dialog">${html}<div class="boutons" style="margin-top:18px">
+    <button class="btn plein" value="ok">${t('enregistrer')}</button><button class="btn" value="annuler" formnovalidate>${t('annuler')}</button></div></form>`;
   const f = $('dlg').querySelector('form');
   f.onsubmit = e => { if (e.submitter?.value === 'ok') { auSubmit(Object.fromEntries(new FormData(f))); sauver(); afficher(); } };
   $('dlg').showModal();
@@ -121,32 +206,31 @@ function ouvrir(html, auSubmit) {
 
 function formulaire(nom, id) {
   const L = LISTES[nom], x = d[nom].find(y => y.id === id) || {};
-  ouvrir(`<h2>${id ? 'Modifier' : 'Ajouter'}</h2>` + L.champs.map(c => champ(c, x[c[0]])).join('') +
-    (id ? `<div class="boutons" style="margin-top:12px"><button type="button" class="btn danger" onclick="supprimer('${nom}','${id}')">Supprimer</button></div>` : ''),
+  ouvrir(`<h2>${L.ico} ${id ? t('modifier') : t('ajouter')}</h2>` + L.champs.map(c => champ(c, x[c[0]])).join('') +
+    (id ? `<div class="boutons" style="margin-top:12px"><button type="button" class="btn danger" onclick="supprimer('${nom}','${id}')">🗑️ ${t('supprimer')}</button></div>` : ''),
     v => id ? Object.assign(x, v) : d[nom].push({ id: Date.now().toString(36), ...v }));
   $('dlg').querySelector('input,select').required = true;
 }
 
 function supprimer(nom, id) {
-  if (!confirm('Supprimer pour de bon ?')) return;
+  if (!confirm(t('confirmer'))) return;
   d[nom] = d[nom].filter(x => x.id !== id);
   sauver(); $('dlg').close(); afficher();
 }
 
 function ficheAide() {
-  ouvrir('<h2>Personne aidée</h2>' + [['nom','Nom'],['medecin','Médecin et téléphone'],['ramq','Numéro d\'assurance maladie'],['notes','Notes (allergies, etc.)','textarea']]
+  ouvrir(`<h2>💛 ${t('personneAidee')}</h2>` + [['nom','nom'],['medecin','medecinTel'],['ramq','numRamq'],['notes','notes','textarea']]
     .map(c => champ(c, d.aide[c[0]])).join(''), v => d.aide = v);
 }
 
 // Le texto part du téléphone de la personne principale : gratuit avec son forfait.
 function demander(nom, id) {
   const x = d[nom].find(y => y.id === id);
-  if (!d.famille.length) { alert('Ajoute d\'abord une personne dans l\'onglet Famille.'); return; }
-  $('dlg').innerHTML = `<h2>À qui demander ?</h2>` + d.famille.map(p =>
-    `<div class="carte"><b>${esc(p.nom)}</b><div class="boutons"><a class="btn plein" style="text-decoration:none;display:inline-block;border-radius:10px;padding:10px 14px"
-      href="sms:${encodeURIComponent(p.tel)}?body=${encodeURIComponent(LISTES[nom].message(x, p))}">📱 Texter</a></div></div>`).join('') +
-    `<p class="petit">Quand la personne te répond oui, choisis son nom dans « Qui s'en occupe ».</p>
-    <div class="boutons"><button class="btn" onclick="$('dlg').close()">Fermer</button></div>`;
+  if (!d.famille.length) { alert(t('familleVide')); return; }
+  $('dlg').innerHTML = `<h2>${t('aQui')}</h2>` + d.famille.map(p =>
+    `<div class="carte famille">${avatar(p)}<div class="corps"><b>${esc(p.nom)}</b><div class="boutons">
+      <a class="btn plein" href="sms:${encodeURIComponent(p.tel)}?body=${encodeURIComponent(LISTES[nom].message(x, p))}">${t('texter')}</a></div></div></div>`).join('') +
+    `<p class="petit">${t('apres')}</p><div class="boutons"><button class="btn" onclick="$('dlg').close()">${t('fermer')}</button></div>`;
   $('dlg').showModal();
 }
 

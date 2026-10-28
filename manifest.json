@@ -1,10 +1,10 @@
-{
+﻿{
   "name": "Proches aidants",
   "short_name": "Proches aidants",
   "lang": "fr-CA",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f6f4ef",
-  "theme_color": "#2f6f5e",
+  "background_color": "#fff8f0",
+  "theme_color": "#ff6b6b",
   "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }
