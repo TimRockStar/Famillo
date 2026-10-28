@@ -11,61 +11,76 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --corail:#ff6b6b; --orange:#ffa94d; --jaune:#ffd43b; --menthe:#38d9a9; --bleu:#4dabf7; --mauve:#9775fa;
-    --fond:#fff8f0; --texte:#2b2140; --doux:#7a7090;
+    --c1:#ff6b6b; --c2:#ffa94d; --mauve:#9775fa;
+    --fond:#fff8f0; --carte:#fff; --carte2:#fff4e6; --texte:#2b2140; --doux:#7a7090; --champ:#fffcf8; --bord:#f0e6dc;
+    color-scheme:light;
   }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-mode=clair]) { --fond:#17131f; --carte:#241e30; --carte2:#2d2540; --texte:#f3eefc; --doux:#a89fbd; --champ:#1d1827; --bord:#3a3150; color-scheme:dark; }
+  }
+  :root[data-mode=sombre] { --fond:#17131f; --carte:#241e30; --carte2:#2d2540; --texte:#f3eefc; --doux:#a89fbd; --champ:#1d1827; --bord:#3a3150; color-scheme:dark; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { margin:0; font:600 17px/1.4 Nunito, system-ui, sans-serif; background:var(--fond); color:var(--texte); padding-bottom:96px; }
-  header { background:linear-gradient(135deg, var(--corail), var(--orange)); color:#fff; padding:22px 18px 56px; border-radius:0 0 32px 32px; position:relative; overflow:hidden; }
-  header::after { content:''; position:absolute; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.15); right:-50px; top:-60px; }
-  header .haut { display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1; }
-  header .app { font-weight:900; font-size:15px; opacity:.9; letter-spacing:.5px; }
-  #langue { border:2px solid rgba(255,255,255,.7); background:none; color:#fff; border-radius:20px; padding:4px 12px; font:800 14px Nunito, sans-serif; }
+  header { background:linear-gradient(135deg, var(--c1), var(--c2)); color:#fff; padding:22px 18px 56px; border-radius:0 0 32px 32px; position:relative; overflow:hidden; text-shadow:0 1px 4px rgba(0,0,0,.2); }
+  header:not(.photo)::after { content:''; position:absolute; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.15); right:-50px; top:-60px; }
+  header.photo { padding-top:30px; padding-bottom:90px; }
+  header .haut { display:flex; justify-content:space-between; align-items:center; gap:8px; position:relative; z-index:1; }
+  header .app { font-weight:900; font-size:15px; opacity:.9; letter-spacing:.5px; flex:1; }
+  .rond { border:2px solid rgba(255,255,255,.7); background:rgba(0,0,0,.08); color:#fff; border-radius:20px; padding:4px 12px; font:800 14px Nunito, sans-serif; cursor:pointer; }
   header h1 { margin:14px 0 0; font-size:26px; font-weight:900; position:relative; z-index:1; }
   header p { margin:4px 0 0; opacity:.95; position:relative; z-index:1; }
   main { padding:0 16px; max-width:640px; margin:-36px auto 0; position:relative; }
-  nav { position:fixed; bottom:12px; left:12px; right:12px; display:flex; background:#fff; border-radius:24px; padding:6px; box-shadow:0 8px 24px rgba(43,33,64,.15); max-width:616px; margin:auto; }
+  nav { position:fixed; bottom:12px; left:12px; right:12px; display:flex; background:var(--carte); border-radius:24px; padding:6px; box-shadow:0 8px 24px rgba(0,0,0,.18); max-width:616px; margin:auto; }
   nav button { flex:1; border:0; background:none; padding:6px 2px; font:700 11px Nunito, sans-serif; color:var(--doux); border-radius:18px; transition:.2s; }
   nav button span { display:block; font-size:24px; transition:transform .2s; }
-  nav button.actif { background:#fff0e6; color:var(--corail); }
+  nav button.actif { background:color-mix(in srgb, var(--c1) 15%, transparent); color:var(--c1); }
   nav button.actif span { transform:scale(1.2) translateY(-2px); }
-  .carte { background:#fff; border-radius:20px; padding:14px 16px; margin-bottom:12px; box-shadow:0 4px 14px rgba(43,33,64,.07); display:flex; gap:12px; align-items:flex-start; animation:entre .35s ease both; }
+  .carte { background:var(--carte); border-radius:20px; padding:14px 16px; margin-bottom:12px; box-shadow:0 4px 14px rgba(0,0,0,.07); display:flex; gap:12px; align-items:flex-start; animation:entre .35s ease both; }
   .carte .corps { flex:1; min-width:0; }
   .carte b { display:block; font-size:18px; font-weight:800; }
   .bulle { flex:none; width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; }
-  .avatar { flex:none; width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-weight:900; color:#fff; font-size:20px; }
-  .meds .bulle { background:#ffe3e3; } .rdv .bulle { background:#e7f5ff; } .taches .bulle { background:#e6fcf5; }
+  .avatar { flex:none; width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font-weight:900; color:#fff; font-size:20px; object-fit:cover; }
+  .meds .bulle { background:rgba(255,107,107,.16); } .rdv .bulle { background:rgba(77,171,247,.16); } .taches .bulle { background:rgba(56,217,169,.16); }
   .petit { color:var(--doux); font-size:15px; display:block; }
   .pastille { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:20px; font-size:14px; font-weight:800; }
-  .pastille.ok { background:#e6fcf5; color:#0c8a66; }
-  .pastille.alerte { background:#fff4e6; color:#d9480f; }
-  .boutons { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-  .btn { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:#f3f0ff; color:var(--mauve); text-decoration:none; display:inline-block; cursor:pointer; transition:transform .1s; }
+  .pastille.ok { background:rgba(56,217,169,.16); color:#12a37a; }
+  .pastille.alerte { background:rgba(255,146,43,.16); color:#e8590c; }
+  .boutons { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+  .btn { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(151,117,250,.14); color:var(--mauve); text-decoration:none; display:inline-block; cursor:pointer; transition:transform .1s; }
   .btn:active { transform:scale(.95); }
-  .btn.plein { background:linear-gradient(135deg, var(--corail), var(--orange)); color:#fff; box-shadow:0 4px 12px rgba(255,107,107,.35); }
-  .btn.danger { background:#fff0f0; color:#e03131; }
-  .fiche { flex-direction:column; gap:4px; background:linear-gradient(135deg, #fff, #fff4e6); }
+  .btn.plein { background:linear-gradient(135deg, var(--c1), var(--c2)); color:#fff; box-shadow:0 4px 12px color-mix(in srgb, var(--c1) 35%, transparent); }
+  .btn.danger { background:rgba(250,82,82,.12); color:#f03e3e; }
+  .fiche { align-items:center; background:linear-gradient(135deg, var(--carte), var(--carte2)); }
   .fiche h2 { margin:0 0 4px; font-size:22px; font-weight:900; }
+  .grande { flex:none; width:84px; height:84px; border-radius:50%; object-fit:cover; border:4px solid var(--carte); box-shadow:0 4px 12px rgba(0,0,0,.15); align-self:flex-start; }
   h2.section { font-size:21px; font-weight:900; margin:22px 4px 12px; }
   label { display:block; margin:12px 0 4px; font-weight:800; }
-  input, textarea, select { width:100%; font:600 16px Nunito, sans-serif; padding:12px; border:2px solid #f0e6dc; border-radius:14px; background:#fffcf8; color:var(--texte); }
-  input:focus, textarea:focus, select:focus { outline:none; border-color:var(--orange); }
-  dialog { border:0; border-radius:26px; width:min(92vw,480px); padding:20px; max-height:90vh; }
+  input, textarea, select { width:100%; font:600 16px Nunito, sans-serif; padding:12px; border:2px solid var(--bord); border-radius:14px; background:var(--champ); color:var(--texte); }
+  input:focus, textarea:focus, select:focus { outline:none; border-color:var(--c2); }
+  .apercu { width:64px; height:64px; border-radius:16px; object-fit:cover; }
+  .apercu[src=""] { display:none; }
+  .themes { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .themes label { margin:0; text-align:center; font-size:13px; cursor:pointer; }
+  .themes input { display:none; }
+  .themes span { display:block; height:44px; border-radius:14px; border:3px solid transparent; margin-bottom:2px; }
+  .themes input:checked + span { border-color:var(--texte); }
+  dialog { border:0; border-radius:26px; width:min(92vw,480px); padding:20px; max-height:90vh; background:var(--carte); color:var(--texte); }
   dialog[open] { animation:monte .25s ease; }
-  dialog::backdrop { background:rgba(43,33,64,.45); }
+  dialog::backdrop { background:rgba(20,15,30,.5); }
   dialog h2 { margin:0 0 6px; font-size:22px; font-weight:900; }
-  .vide { text-align:center; padding:28px 16px; color:var(--doux); background:#fff; border-radius:20px; }
+  .vide { text-align:center; padding:28px 16px; color:var(--doux); background:var(--carte); border-radius:20px; }
   .vide span { font-size:44px; display:block; margin-bottom:6px; }
   .ajouter { position:fixed; right:22px; bottom:100px; width:60px; height:60px; border-radius:50%; border:0; font-size:32px; color:#fff;
-    background:linear-gradient(135deg, var(--mauve), var(--bleu)); box-shadow:0 8px 20px rgba(151,117,250,.45); cursor:pointer; }
+    background:linear-gradient(135deg, var(--c2), var(--c1)); box-shadow:0 8px 20px color-mix(in srgb, var(--c1) 45%, transparent); cursor:pointer; }
   @keyframes entre { from { opacity:0; transform:translateY(10px); } }
   @keyframes monte { from { opacity:0; transform:translateY(30px) scale(.97); } }
   @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
 </style>
 </head>
 <body>
-<header>
-  <div class="haut"><span class="app" id="nomApp"></span><button id="langue" onclick="changerLangue()"></button></div>
+<header id="entete">
+  <div class="haut"><span class="app" id="nomApp"></span>
+    <button class="rond" id="perso" onclick="personnaliser()"></button><button class="rond" id="langue" onclick="changerLangue()"></button></div>
   <h1 id="titre"></h1><p id="sousTitre"></p>
 </header>
 <main id="page"></main>
@@ -74,11 +89,13 @@
 
 <script>
 const NOM_APP = 'Proches aidants'; // à remplacer quand le nom sera choisi
-// shortcut: données dans localStorage (sur le téléphone seulement), passer à un serveur si on veut partager en ligne.
+// shortcut: données et photos dans localStorage (environ 5 Mo, sur le téléphone seulement), passer à IndexedDB si les gens manquent de place.
 const CLE = 'proches-aidants';
 let d = JSON.parse(localStorage.getItem(CLE) || 'null') || { aide:{}, meds:[], rdv:[], taches:[], famille:[] };
+d.reglages ||= { theme:'corail', mode:'auto', fond:'' };
 let lang = localStorage.getItem(CLE + '-lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
-const sauver = () => localStorage.setItem(CLE, JSON.stringify(d));
+
+const THEMES = { corail:['#ff6b6b','#ffa94d'], ocean:['#1c7ed6','#22b8cf'], foret:['#2b8a3e','#82c91e'], lavande:['#7950f2','#f783ac'], soleil:['#f76707','#fab005'], baie:['#c2255c','#7048e8'] };
 
 const TXT = {
   fr: {
@@ -88,11 +105,15 @@ const TXT = {
     rienSemaine:'Semaine tranquille ! Rien à prévoir.', rien:'Rien pour l\'instant. Appuie sur + pour commencer !',
     nomMed:'Nom du médicament', dose:'Dose', heure:'Quand le prendre', renouv:'Date de renouvellement', renouveler:'Renouveler le',
     quoiRdv:'Rendez-vous (ex. : cardiologue)', quand:'Date et heure', lieu:'Lieu', qui:'Qui s\'en occupe', personne:'Personne encore',
-    sOccupe: n => `${n} s'en occupe`, quoiTache:'Tâche (ex. : épicerie)', nom:'Nom', tel:'Numéro de téléphone',
+    sOccupe: n => `${n} s'en occupe`, quoiTache:'Tâche (ex. : épicerie)', nom:'Nom', tel:'Numéro de téléphone', photo:'Photo',
     demander:'📱 Demander de l\'aide', modifier:'Modifier', contacts:'👥 Choisir dans mes contacts', ajouter:'Ajouter',
     enregistrer:'Enregistrer', annuler:'Annuler', supprimer:'Supprimer', confirmer:'Supprimer pour de bon ?', fermer:'Fermer',
     aQui:'À qui demander ?', texter:'📱 Texter', apres:'Quand la personne te répond oui, choisis son nom dans « Qui s\'en occupe ».',
     familleVide:'Ajoute d\'abord une personne dans l\'onglet Famille.', medecinTel:'Médecin et téléphone', numRamq:'Numéro d\'assurance maladie', notes:'Notes (allergies, etc.)',
+    personnaliser:'🎨 Personnaliser', couleurs:'Couleurs', apparence:'Apparence', auto:'Auto (comme le téléphone)', clair:'☀️ Clair', sombre:'🌙 Sombre',
+    fondEcran:'Photo d\'arrière-plan (en haut)', choisirPhoto:'📷 Choisir une photo', retirer:'Retirer',
+    plein:'Le téléphone manque de place pour les photos. Retire une photo ou choisis-en une plus petite.',
+    th_corail:'Corail', th_ocean:'Océan', th_foret:'Forêt', th_lavande:'Lavande', th_soleil:'Soleil', th_baie:'Petits fruits',
     msgRdv: (p, a, r, quand) => `Bonjour ${p}, ${a} a un rendez-vous : ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Peux-tu t'en occuper ? Réponds-moi par texto. Merci !`,
     msgTache: (p, a, t) => `Bonjour ${p}, peux-tu t'occuper de : ${t.quoi}, pour ${a} ? Réponds-moi par texto. Merci !`,
   },
@@ -103,11 +124,15 @@ const TXT = {
     rienSemaine:'A quiet week! Nothing planned.', rien:'Nothing yet. Tap + to get started!',
     nomMed:'Medication name', dose:'Dose', heure:'When to take it', renouv:'Refill date', renouveler:'Refill on',
     quoiRdv:'Appointment (e.g. cardiologist)', quand:'Date and time', lieu:'Place', qui:'Who\'s taking care of it', personne:'Nobody yet',
-    sOccupe: n => `${n} is on it`, quoiTache:'Task (e.g. groceries)', nom:'Name', tel:'Phone number',
+    sOccupe: n => `${n} is on it`, quoiTache:'Task (e.g. groceries)', nom:'Name', tel:'Phone number', photo:'Photo',
     demander:'📱 Ask for help', modifier:'Edit', contacts:'👥 Pick from my contacts', ajouter:'Add',
     enregistrer:'Save', annuler:'Cancel', supprimer:'Delete', confirmer:'Delete for good?', fermer:'Close',
     aQui:'Who should I ask?', texter:'📱 Text', apres:'When they reply yes, pick their name under "Who\'s taking care of it".',
     familleVide:'First add someone in the Family tab.', medecinTel:'Doctor and phone', numRamq:'Health card number', notes:'Notes (allergies, etc.)',
+    personnaliser:'🎨 Customize', couleurs:'Colours', apparence:'Appearance', auto:'Auto (like the phone)', clair:'☀️ Light', sombre:'🌙 Dark',
+    fondEcran:'Background photo (top)', choisirPhoto:'📷 Choose a photo', retirer:'Remove',
+    plein:'The phone is out of room for photos. Remove a photo or pick a smaller one.',
+    th_corail:'Coral', th_ocean:'Ocean', th_foret:'Forest', th_lavande:'Lavender', th_soleil:'Sunshine', th_baie:'Berries',
     msgRdv: (p, a, r, quand) => `Hi ${p}, ${a} has an appointment: ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Can you take care of it? Text me back. Thanks!`,
     msgTache: (p, a, t) => `Hi ${p}, can you take care of: ${t.quoi}, for ${a}? Text me back. Thanks!`,
   },
@@ -115,6 +140,7 @@ const TXT = {
 const t = k => TXT[lang][k];
 const locale = () => lang === 'fr' ? 'fr-CA' : 'en-CA';
 
+const sauver = () => { try { localStorage.setItem(CLE, JSON.stringify(d)); return true; } catch { alert(t('plein')); return false; } };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
 const nomAide = () => d.aide.nom || t('laPersonne');
@@ -123,7 +149,17 @@ const dateFr = s => s ? new Date(s).toLocaleString(locale(), { weekday:'long', d
 const jourFr = s => s ? new Date(s + 'T12:00').toLocaleDateString(locale(), { day:'numeric', month:'long' }) : '';
 const dansJours = (s, n) => s && (new Date(s) - Date.now()) < n * 864e5;
 const COULEURS = ['#ff6b6b','#ffa94d','#38d9a9','#4dabf7','#9775fa','#f783ac'];
-const avatar = p => `<div class="avatar" style="background:${COULEURS[parseInt(p.id, 36) % COULEURS.length]}">${esc((p.nom || '?')[0].toUpperCase())}</div>`;
+const avatar = p => p.photo ? `<img class="avatar" src="${esc(p.photo)}" alt="">`
+  : `<div class="avatar" style="background:${COULEURS[parseInt(p.id, 36) % COULEURS.length]}">${esc((p.nom || '?')[0].toUpperCase())}</div>`;
+
+// Réduit une photo pour ne pas remplir le téléphone (côté le plus long = max pixels).
+async function reduire(blob, max) {
+  const img = await createImageBitmap(blob);
+  const k = Math.min(1, max / Math.max(img.width, img.height));
+  const c = Object.assign(document.createElement('canvas'), { width: Math.round(img.width * k), height: Math.round(img.height * k) });
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', .8);
+}
 
 // Chaque liste est décrite une fois ; le même code affiche, ajoute et modifie.
 const LISTES = {
@@ -136,7 +172,7 @@ const LISTES = {
   taches:  { ico:'✅', champs:[['quoi','quoiTache'],['qui','qui','qui']],
              ligne: x => `<b>${esc(x.quoi)}</b>` + qui(x),
              message: (x, p) => t('msgTache')(p.nom, nomAide(), x) },
-  famille: { ico:'👪', champs:[['nom','nom'],['tel','tel','tel']],
+  famille: { ico:'👪', champs:[['nom','nom'],['tel','tel','tel'],['photo','photo','photo']],
              ligne: p => `<b>${esc(p.nom)}</b><span class="petit">${esc(p.tel)}</span>` },
 };
 const qui = x => x.qui ? `<span class="pastille ok">🙌 ${esc(t('sOccupe')(nomDe(x.qui) || ''))}</span>` : `<span class="pastille alerte">🙋 ${t('personne')}</span>`;
@@ -149,10 +185,21 @@ function carte(nom, x, boutons = '') {
   return `<div class="carte ${nom}">${icone}<div class="corps">${LISTES[nom].ligne(x)}${boutons}</div></div>`;
 }
 
+function appliquerReglages() {
+  const r = d.reglages, [c1, c2] = THEMES[r.theme] || THEMES.corail, root = document.documentElement;
+  root.style.setProperty('--c1', c1); root.style.setProperty('--c2', c2);
+  if (r.mode === 'auto') delete root.dataset.mode; else root.dataset.mode = r.mode;
+  document.querySelector('meta[name=theme-color]').content = c1;
+  $('entete').classList.toggle('photo', !!r.fond);
+  $('entete').style.background = r.fond ? `linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.5)), url("${r.fond}") center/cover` : '';
+}
+
 function afficher() {
+  appliquerReglages();
   document.documentElement.lang = locale();
   $('nomApp').textContent = NOM_APP;
   $('langue').textContent = t('autre');
+  $('perso').textContent = t('personnaliser');
   $('titre').textContent = onglet === 'accueil' ? t('bonjour') : LISTES[onglet].ico + ' ' + t(onglet);
   $('sousTitre').textContent = onglet === 'accueil' ? t('semaineDe')(nomAide()) : '';
   $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id)}</button>`).join('');
@@ -171,11 +218,12 @@ function accueil() {
   const meds = d.meds.filter(m => dansJours(m.renouv, 7));
   const libres = d.taches.filter(x => !x.qui);
   const avenir = [...rdv.map(r => carte('rdv', r)), ...meds.map(m => carte('meds', m)), ...libres.map(x => carte('taches', x))].join('');
-  return `<div class="carte fiche"><h2>💛 ${esc(a.nom || t('personneAidee'))}</h2>
+  return `<div class="carte fiche">${a.photo ? `<img class="grande" src="${esc(a.photo)}" alt="">` : ''}<div class="corps">
+      <h2>${a.photo ? '' : '💛 '}${esc(a.nom || t('personneAidee'))}</h2>
       ${a.medecin ? `<div><span class="petit" style="display:inline">🩺 ${t('medecin')} :</span> ${esc(a.medecin)}</div>` : ''}
       ${a.ramq ? `<div><span class="petit" style="display:inline">🪪 ${t('ramq')} :</span> ${esc(a.ramq)}</div>` : ''}
       ${a.notes ? `<div class="petit" style="white-space:pre-wrap">📝 ${esc(a.notes)}</div>` : ''}
-      <div class="boutons"><button class="btn" onclick="ficheAide()">✏️ ${t('modifierFiche')}</button></div></div>
+      <div class="boutons"><button class="btn" onclick="ficheAide()">✏️ ${t('modifierFiche')}</button></div></div></div>
     <h2 class="section">${t('cetteSemaine')}</h2>${avenir || `<div class="vide"><span>🌤️</span>${t('rienSemaine')}</div>`}`;
 }
 
@@ -193,14 +241,33 @@ function champ([cle, txt, type], val) {
   if (type === 'qui') return `<label>${t(txt)}</label><select name="${cle}"><option value="">${t('personne')}</option>` +
     d.famille.map(p => `<option value="${p.id}" ${p.id === val ? 'selected' : ''}>${esc(p.nom)}</option>`).join('') + `</select>`;
   if (type === 'textarea') return `<label>${t(txt)}</label><textarea name="${cle}" rows="4">${esc(val)}</textarea>`;
+  // La photo est réduite dès qu'elle est choisie et gardée dans un champ caché.
+  if (type === 'photo' || type === 'fond') return `<label>${t(txt)}</label><div class="boutons" style="margin:0">
+      <img class="apercu" src="${esc(val)}" alt="">
+      <label class="btn" style="margin:0">${t('choisirPhoto')}<input type="file" accept="image/*" hidden onchange="choisirPhoto(this, ${type === 'fond' ? 1000 : 240})"></label>
+      <button type="button" class="btn danger" onclick="choisirPhoto(this)">${t('retirer')}</button>
+      <input type="hidden" name="${cle}" value="${esc(val)}"></div>`;
   return `<label>${t(txt)}</label><input name="${cle}" type="${type || 'text'}" value="${esc(val)}">`;
+}
+
+async function choisirPhoto(el, max) {
+  const zone = el.closest('.boutons'), fichier = el.files?.[0];
+  const url = fichier ? await reduire(fichier, max) : '';
+  zone.querySelector('input[type=hidden]').value = url;
+  zone.querySelector('.apercu').src = url;
 }
 
 function ouvrir(html, auSubmit) {
   $('dlg').innerHTML = `<form method="dialog">${html}<div class="boutons" style="margin-top:18px">
     <button class="btn plein" value="ok">${t('enregistrer')}</button><button class="btn" value="annuler" formnovalidate>${t('annuler')}</button></div></form>`;
   const f = $('dlg').querySelector('form');
-  f.onsubmit = e => { if (e.submitter?.value === 'ok') { auSubmit(Object.fromEntries(new FormData(f))); sauver(); afficher(); } };
+  f.onsubmit = e => {
+    if (e.submitter?.value !== 'ok') return;
+    const avant = JSON.stringify(d);
+    auSubmit(Object.fromEntries(new FormData(f)));
+    if (!sauver()) { d = JSON.parse(avant); e.preventDefault(); } // trop plein : on annule, rien n'est perdu
+    afficher();
+  };
   $('dlg').showModal();
 }
 
@@ -209,7 +276,7 @@ function formulaire(nom, id) {
   ouvrir(`<h2>${L.ico} ${id ? t('modifier') : t('ajouter')}</h2>` + L.champs.map(c => champ(c, x[c[0]])).join('') +
     (id ? `<div class="boutons" style="margin-top:12px"><button type="button" class="btn danger" onclick="supprimer('${nom}','${id}')">🗑️ ${t('supprimer')}</button></div>` : ''),
     v => id ? Object.assign(x, v) : d[nom].push({ id: Date.now().toString(36), ...v }));
-  $('dlg').querySelector('input,select').required = true;
+  $('dlg').querySelector('input:not([type=file]):not([type=hidden]),select').required = true;
 }
 
 function supprimer(nom, id) {
@@ -219,8 +286,17 @@ function supprimer(nom, id) {
 }
 
 function ficheAide() {
-  ouvrir(`<h2>💛 ${t('personneAidee')}</h2>` + [['nom','nom'],['medecin','medecinTel'],['ramq','numRamq'],['notes','notes','textarea']]
+  ouvrir(`<h2>💛 ${t('personneAidee')}</h2>` + [['nom','nom'],['photo','photo','photo'],['medecin','medecinTel'],['ramq','numRamq'],['notes','notes','textarea']]
     .map(c => champ(c, d.aide[c[0]])).join(''), v => d.aide = v);
+}
+
+function personnaliser() {
+  const r = d.reglages;
+  ouvrir(`<h2>${t('personnaliser')}</h2><label>${t('couleurs')}</label><div class="themes">` +
+    Object.entries(THEMES).map(([k, [a, b]]) => `<label><input type="radio" name="theme" value="${k}" ${k === r.theme ? 'checked' : ''}>
+      <span style="background:linear-gradient(135deg, ${a}, ${b})"></span>${t('th_' + k)}</label>`).join('') + `</div>
+    <label>${t('apparence')}</label><select name="mode">${['auto','clair','sombre'].map(m => `<option value="${m}" ${m === r.mode ? 'selected' : ''}>${t(m)}</option>`).join('')}</select>` +
+    champ(['fond', 'fondEcran', 'fond'], r.fond), v => d.reglages = v);
 }
 
 // Le texto part du téléphone de la personne principale : gratuit avec son forfait.
@@ -234,10 +310,14 @@ function demander(nom, id) {
   $('dlg').showModal();
 }
 
+// Android donne aussi la photo du contact quand elle existe.
 async function depuisContacts() {
   try {
-    const choix = await navigator.contacts.select(['name', 'tel'], { multiple: true });
-    choix.forEach(c => c.tel?.[0] && d.famille.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), nom: c.name?.[0] || c.tel[0], tel: c.tel[0] }));
+    const dispo = await navigator.contacts.getProperties();
+    const choix = await navigator.contacts.select(['name', 'tel', ...(dispo.includes('icon') ? ['icon'] : [])], { multiple: true });
+    for (const c of choix) if (c.tel?.[0]) d.famille.push({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), nom: c.name?.[0] || c.tel[0], tel: c.tel[0],
+      photo: c.icon?.[0] ? await reduire(c.icon[0], 240) : '' });
     sauver(); afficher();
   } catch { /* la personne a annulé */ }
 }
