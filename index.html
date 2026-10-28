@@ -72,6 +72,9 @@
   dialog h2 { margin:0 0 6px; font-size:22px; font-weight:900; }
   .vide { text-align:center; padding:28px 16px; color:var(--doux); background:var(--carte); border-radius:20px; }
   .vide span { font-size:44px; display:block; margin-bottom:6px; }
+  footer { text-align:center; margin:28px 0 8px; color:var(--doux); font-size:14px; }
+  footer .boutons { justify-content:center; }
+  footer a { color:var(--doux); font-weight:800; }
   .ajouter { position:fixed; right:22px; bottom:100px; width:60px; height:60px; border-radius:50%; border:0; font-size:32px; color:#fff;
     background:linear-gradient(135deg, var(--c2), var(--c1)); box-shadow:0 8px 20px color-mix(in srgb, var(--c1) 45%, transparent); cursor:pointer; }
   @keyframes entre { from { opacity:0; transform:translateY(10px); } }
@@ -116,6 +119,10 @@ const TXT = {
     fondEcran:'Photo d\'arrière-plan (en haut)', choisirPhoto:'📷 Choisir une photo', retirer:'Retirer',
     plein:'Le téléphone manque de place pour les photos. Retire une photo ou choisis-en une plus petite.',
     th_corail:'Corail', th_ocean:'Océan', th_foret:'Forêt', th_lavande:'Lavande', th_soleil:'Soleil', th_baie:'Petits fruits',
+    suggerer:'💡 Suggérer une idée', demandes:'✅ Vous l\'avez demandé', propulse:'Propulsé par',
+    sujetIdee:'Famillo : une idée', corpsIdee:'Bonjour ! Ce serait le fun si Famillo pouvait : ',
+    demandesIntro:'Les idées des utilisateurs qu\'on a ajoutées. On lit toutes les suggestions !',
+    demandesVide:'Aucune encore. Ta suggestion pourrait être la première sur cette liste !',
     msgRdv: (p, a, r, quand) => `Bonjour ${p}, ${a} a un rendez-vous : ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Peux-tu t'en occuper ? Réponds-moi par texto. Merci !`,
     msgTache: (p, a, t) => `Bonjour ${p}, peux-tu t'occuper de : ${t.quoi}, pour ${a} ? Réponds-moi par texto. Merci !`,
   },
@@ -135,6 +142,10 @@ const TXT = {
     fondEcran:'Background photo (top)', choisirPhoto:'📷 Choose a photo', retirer:'Remove',
     plein:'The phone is out of room for photos. Remove a photo or pick a smaller one.',
     th_corail:'Coral', th_ocean:'Ocean', th_foret:'Forest', th_lavande:'Lavender', th_soleil:'Sunshine', th_baie:'Berries',
+    suggerer:'💡 Suggest an idea', demandes:'✅ You asked, we did it', propulse:'Powered by',
+    sujetIdee:'Famillo: an idea', corpsIdee:'Hi! It would be great if Famillo could: ',
+    demandesIntro:'Ideas from users that we added. We read every suggestion!',
+    demandesVide:'None yet. Your suggestion could be the first on this list!',
     msgRdv: (p, a, r, quand) => `Hi ${p}, ${a} has an appointment: ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Can you take care of it? Text me back. Thanks!`,
     msgTache: (p, a, t) => `Hi ${p}, can you take care of: ${t.quoi}, for ${a}? Text me back. Thanks!`,
   },
@@ -205,7 +216,20 @@ function afficher() {
   $('titre').textContent = onglet === 'accueil' ? t('bonjour') : LISTES[onglet].ico + ' ' + t(onglet);
   $('sousTitre').textContent = onglet === 'accueil' ? t('semaineDe')(nomAide()) : '';
   $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id)}</button>`).join('');
-  $('page').innerHTML = onglet === 'accueil' ? accueil() : liste(onglet);
+  $('page').innerHTML = (onglet === 'accueil' ? accueil() : liste(onglet)) + `<footer><div class="boutons">
+      <a class="btn" href="mailto:bonjour@lancetonapp.com?subject=${encodeURIComponent(t('sujetIdee'))}&body=${encodeURIComponent(t('corpsIdee'))}">${t('suggerer')}</a>
+      <button class="btn" onclick="voirDemandes()">${t('demandes')}</button></div>
+    <p>${t('propulse')} <a href="https://lancetonapp.com" target="_blank" rel="noopener">Lance ton app</a></p></footer>`;
+}
+
+// Idées des utilisateurs ajoutées à l'app : [fr, en] ; à remplir à chaque mise à jour.
+const DEMANDES = [];
+
+function voirDemandes() {
+  $('dlg').innerHTML = `<h2>${t('demandes')}</h2><p class="petit">${t('demandesIntro')}</p>` +
+    (DEMANDES.length ? DEMANDES.map(x => `<div class="carte"><span>✅</span><div class="corps">${esc(x[lang === 'fr' ? 0 : 1])}</div></div>`).join('') : `<div class="vide"><span>💡</span>${t('demandesVide')}</div>`) +
+    `<div class="boutons"><button class="btn" onclick="$('dlg').close()">${t('fermer')}</button></div>`;
+  $('dlg').showModal();
 }
 
 function changerLangue() {
