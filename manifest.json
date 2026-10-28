@@ -1,6 +1,6 @@
-﻿{
-  "name": "Proches aidants",
-  "short_name": "Proches aidants",
+{
+  "name": "Famillo",
+  "short_name": "Famillo",
   "lang": "fr-CA",
   "start_url": "./",
   "display": "standalone",

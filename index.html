@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Proches aidants</title>
+<title>Famillo</title>
 <meta name="theme-color" content="#ff6b6b">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg">
@@ -88,9 +88,9 @@
 <dialog id="dlg"></dialog>
 
 <script>
-const NOM_APP = 'Proches aidants'; // à remplacer quand le nom sera choisi
+const NOM_APP = 'Famillo';
 // shortcut: données et photos dans localStorage (environ 5 Mo, sur le téléphone seulement), passer à IndexedDB si les gens manquent de place.
-const CLE = 'proches-aidants';
+const CLE = 'famillo';
 let d = JSON.parse(localStorage.getItem(CLE) || 'null') || { aide:{}, meds:[], rdv:[], taches:[], famille:[] };
 d.reglages ||= { theme:'corail', mode:'auto', fond:'' };
 let lang = localStorage.getItem(CLE + '-lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
