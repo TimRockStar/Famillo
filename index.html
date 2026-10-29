@@ -108,8 +108,8 @@ const TXT = {
     bonjour:'Bonjour ! 👋', semaineDe: n => `Voici la semaine de ${n}`, laPersonne:'la personne aidée', personneAidee:'Personne aidée',
     medecin:'Médecin', ramq:'Assurance maladie', modifierFiche:'Modifier la fiche', cetteSemaine:'Cette semaine',
     rienSemaine:'Semaine tranquille ! Rien à prévoir.', rien:'Rien pour l\'instant. Appuie sur + pour commencer !',
-    nomMed:'Nom du médicament', dose:'Dose', heure:'Quand le prendre', renouv:'Date de renouvellement (si on ne compte pas les pilules)', renouveler:'Renouveler le',
-    qte:'Pilules dans le pot (au début)', debut:'Début (achat ou première prise)', parJour:'Pilules par jour (1 si vide)',
+    nomMed:'Nom du médicament', dose:'Dose (facultatif, ex. : 20 mg)', heure:'Quand le prendre (facultatif)', renouv:'Date de renouvellement (seulement si on ne compte pas les pilules)', renouveler:'Renouveler le',
+    qte:'Pilules dans la bouteille neuve (écrit sur l\'étiquette, ex. : 30). Bouteille déjà commencée ? Mets ce que tu comptes aujourd\'hui.', debut:'Date de la première prise (ou aujourd\'hui, si tu viens de compter)', parJour:'Pilules par jour (1, 2, 3…)',
     recompter:'🔢 Recompter', rappelCal:'📅 Rappel', resteQuestion:'Combien de pilules reste-t-il dans le pot ?',
     resteHint:'Le calcul suppose que la dose d\'aujourd\'hui n\'est pas encore prise.',
     avisMed:'Cette app ne remplace pas l\'avis du pharmacien ou du médecin.',
@@ -145,8 +145,8 @@ const TXT = {
     bonjour:'Hi there! 👋', semaineDe: n => `Here's ${n}'s week`, laPersonne:'your loved one', personneAidee:'Loved one',
     medecin:'Doctor', ramq:'Health card', modifierFiche:'Edit profile', cetteSemaine:'This week',
     rienSemaine:'A quiet week! Nothing planned.', rien:'Nothing yet. Tap + to get started!',
-    nomMed:'Medication name', dose:'Dose', heure:'When to take it', renouv:'Refill date (if not counting pills)', renouveler:'Refill on',
-    qte:'Pills in the bottle (at the start)', debut:'Start (purchase or first dose)', parJour:'Pills per day (1 if empty)',
+    nomMed:'Medication name', dose:'Dose (optional, e.g. 20 mg)', heure:'When to take it (optional)', renouv:'Refill date (only if not counting pills)', renouveler:'Refill on',
+    qte:'Pills in the new bottle (on the pharmacy label, e.g. 30). Bottle already started? Enter what you count today.', debut:'Date of the first dose (or today, if you just counted)', parJour:'Pills per day (1, 2, 3…)',
     recompter:'🔢 Recount', rappelCal:'📅 Reminder', resteQuestion:'How many pills are left in the bottle?',
     resteHint:'The calculation assumes today\'s dose has not been taken yet.',
     avisMed:'This app does not replace the advice of a pharmacist or doctor.',
@@ -242,7 +242,7 @@ function rappelCalendrier(id) {
 
 // Chaque liste est décrite une fois ; le même code affiche, ajoute et modifie.
 const LISTES = {
-  meds:    { ico:'💊', champs:[['nom','nomMed'],['dose','dose'],['heure','heure'],['qte','qte','number'],['debut','debut','date'],['parJour','parJour','number'],['renouv','renouv','date']],
+  meds:    { ico:'💊', champs:[['nom','nomMed'],['parJour','parJour','number'],['debut','debut','date'],['qte','qte','number'],['dose','dose'],['heure','heure'],['renouv','renouv','date']],
              // Un nouveau pot (autre quantité ou autre début) efface l'ancien décompte.
              avant: (x, v) => { if (x.qte !== v.qte || x.debut !== v.debut) delete x.compte; },
              ligne: m => {
