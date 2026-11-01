@@ -1,54 +1,280 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T00:00:00-04:00",
+  "generatedAt": "2026-11-01T12:00:00-04:00",
   "title": "Design System: Famillo",
   "extensions": {
     "colorMeta": {
-      "corail": { "role": "primary", "displayName": "Corail (thème)", "canonical": "var(--c1)", "tonalRamp": ["#5c1a1a", "#8f2626", "#c23636", "#e84a4a", "#ff6b6b", "#ff8f8f", "#ffb8b8", "#ffe3e3"] },
-      "abricot": { "role": "primary", "displayName": "Abricot (thème)", "canonical": "var(--c2)", "tonalRamp": ["#5c3108", "#8a4a0d", "#c26a14", "#f08c22", "#ffa94d", "#ffc078", "#ffd8a8", "#fff4e6"] },
-      "mauve": { "role": "secondary", "displayName": "Mauve", "canonical": "var(--mauve)", "tonalRamp": ["#2a1a5e", "#3f2a8a", "#5a3fc0", "#7a5ae8", "#9775fa", "#b197fc", "#d0bfff", "#f3f0ff"] },
-      "bleu-rdv": { "role": "tertiary", "displayName": "Bleu rendez-vous", "tonalRamp": ["#0b3254", "#114b7d", "#1864ab", "#228be6", "#4dabf7", "#74c0fc", "#a5d8ff", "#e7f5ff"] },
-      "menthe-taches": { "role": "tertiary", "displayName": "Menthe tâches", "tonalRamp": ["#063d2c", "#0a5c43", "#0c8a63", "#20c997", "#38d9a9", "#63e6be", "#96f2d7", "#e6fcf5"] },
-      "vert-ok": { "role": "semantic", "displayName": "Vert OK" },
-      "orange-alerte": { "role": "semantic", "displayName": "Orange alerte" },
-      "rouge-danger": { "role": "semantic", "displayName": "Rouge danger" },
-      "creme-fond": { "role": "neutral", "displayName": "Crème fond", "canonical": "var(--fond)" },
-      "carte": { "role": "neutral", "displayName": "Carte", "canonical": "var(--carte)" },
-      "peche-carte": { "role": "neutral", "displayName": "Pêche carte", "canonical": "var(--carte2)" },
-      "champ": { "role": "neutral", "displayName": "Champ", "canonical": "var(--champ)" },
-      "bord-sable": { "role": "neutral", "displayName": "Bord sable", "canonical": "var(--bord)" },
-      "encre-prune": { "role": "neutral", "displayName": "Encre prune", "canonical": "var(--texte)" },
-      "lavande-douce": { "role": "neutral", "displayName": "Lavande douce", "canonical": "var(--doux)" },
-      "nuit-fond": { "role": "neutral", "displayName": "Nuit fond (sombre)" },
-      "nuit-carte": { "role": "neutral", "displayName": "Nuit carte (sombre)" },
-      "nuit-carte2": { "role": "neutral", "displayName": "Nuit carte 2 (sombre)" },
-      "nuit-champ": { "role": "neutral", "displayName": "Nuit champ (sombre)" },
-      "nuit-bord": { "role": "neutral", "displayName": "Nuit bord (sombre)" },
-      "nuit-texte": { "role": "neutral", "displayName": "Nuit texte (sombre)" },
-      "nuit-doux": { "role": "neutral", "displayName": "Nuit doux (sombre)" }
+      "corail": {
+        "role": "primary",
+        "displayName": "Corail (thème)",
+        "canonical": "var(--c1)",
+        "tonalRamp": [
+          "#5c1a1a",
+          "#8f2626",
+          "#c23636",
+          "#e84a4a",
+          "#ff6b6b",
+          "#ff8f8f",
+          "#ffb8b8",
+          "#ffe3e3"
+        ]
+      },
+      "abricot": {
+        "role": "primary",
+        "displayName": "Abricot (thème)",
+        "canonical": "var(--c2)",
+        "tonalRamp": [
+          "#5c3108",
+          "#8a4a0d",
+          "#c26a14",
+          "#f08c22",
+          "#ffa94d",
+          "#ffc078",
+          "#ffd8a8",
+          "#fff4e6"
+        ]
+      },
+      "mauve": {
+        "role": "secondary",
+        "displayName": "Mauve (teinte des boutons doux)",
+        "tonalRamp": [
+          "#2a1a5e",
+          "#3f2a8a",
+          "#5a3fc0",
+          "#7a5ae8",
+          "#9775fa",
+          "#b197fc",
+          "#d0bfff",
+          "#f3f0ff"
+        ]
+      },
+      "bleu-rdv": {
+        "role": "tertiary",
+        "displayName": "Bleu rendez-vous",
+        "tonalRamp": [
+          "#0b3254",
+          "#114b7d",
+          "#1864ab",
+          "#228be6",
+          "#4dabf7",
+          "#74c0fc",
+          "#a5d8ff",
+          "#e7f5ff"
+        ]
+      },
+      "menthe-taches": {
+        "role": "tertiary",
+        "displayName": "Menthe tâches",
+        "tonalRamp": [
+          "#063d2c",
+          "#0a5c43",
+          "#0c8a63",
+          "#20c997",
+          "#38d9a9",
+          "#63e6be",
+          "#96f2d7",
+          "#e6fcf5"
+        ]
+      },
+      "vert-ok": {
+        "role": "semantic",
+        "displayName": "Vert OK",
+        "canonical": "var(--ok)"
+      },
+      "orange-alerte": {
+        "role": "semantic",
+        "displayName": "Orange alerte",
+        "canonical": "var(--alerte)"
+      },
+      "rouge-danger": {
+        "role": "semantic",
+        "displayName": "Rouge danger",
+        "canonical": "var(--danger)"
+      },
+      "creme-fond": {
+        "role": "neutral",
+        "displayName": "Crème fond",
+        "canonical": "var(--fond)"
+      },
+      "carte": {
+        "role": "neutral",
+        "displayName": "Carte",
+        "canonical": "var(--carte)"
+      },
+      "peche-carte": {
+        "role": "neutral",
+        "displayName": "Pêche carte",
+        "canonical": "var(--carte2)"
+      },
+      "champ": {
+        "role": "neutral",
+        "displayName": "Champ",
+        "canonical": "var(--champ)"
+      },
+      "bord-sable": {
+        "role": "neutral",
+        "displayName": "Bord sable",
+        "canonical": "var(--bord)"
+      },
+      "encre-prune": {
+        "role": "neutral",
+        "displayName": "Encre prune",
+        "canonical": "var(--texte)"
+      },
+      "lavande-douce": {
+        "role": "neutral",
+        "displayName": "Lavande douce",
+        "canonical": "var(--doux)"
+      },
+      "nuit-fond": {
+        "role": "neutral",
+        "displayName": "Nuit fond (sombre)"
+      },
+      "nuit-carte": {
+        "role": "neutral",
+        "displayName": "Nuit carte (sombre)"
+      },
+      "nuit-carte2": {
+        "role": "neutral",
+        "displayName": "Nuit carte 2 (sombre)"
+      },
+      "nuit-champ": {
+        "role": "neutral",
+        "displayName": "Nuit champ (sombre)"
+      },
+      "nuit-bord": {
+        "role": "neutral",
+        "displayName": "Nuit bord (sombre)"
+      },
+      "nuit-texte": {
+        "role": "neutral",
+        "displayName": "Nuit texte (sombre)"
+      },
+      "nuit-doux": {
+        "role": "neutral",
+        "displayName": "Nuit doux (sombre)"
+      },
+      "corail-fonce": {
+        "role": "primary",
+        "displayName": "Corail foncé (thème, sous texte blanc)",
+        "canonical": "var(--f1)"
+      },
+      "abricot-fonce": {
+        "role": "primary",
+        "displayName": "Abricot foncé (thème, sous texte blanc)",
+        "canonical": "var(--f2)"
+      },
+      "mauve-texte": {
+        "role": "secondary",
+        "displayName": "Mauve texte",
+        "canonical": "var(--mauve)"
+      },
+      "orange-teinte": {
+        "role": "semantic",
+        "displayName": "Orange teinte (fond d'alerte à 16 %)"
+      },
+      "rouge-teinte": {
+        "role": "semantic",
+        "displayName": "Rouge teinte (fond danger à 12 %)"
+      },
+      "nuit-mauve-texte": {
+        "role": "neutral",
+        "displayName": "Nuit mauve texte (sombre)"
+      },
+      "nuit-ok": {
+        "role": "semantic",
+        "displayName": "Nuit OK (sombre)"
+      },
+      "nuit-alerte": {
+        "role": "semantic",
+        "displayName": "Nuit alerte (sombre)"
+      },
+      "nuit-danger": {
+        "role": "semantic",
+        "displayName": "Nuit danger (sombre)"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Titre de l'en-tête." },
-      "headline": { "displayName": "Headline", "purpose": "Titres de la fiche et des fenêtres." },
-      "section": { "displayName": "Section", "purpose": "Titres de section." },
-      "title": { "displayName": "Title", "purpose": "Nom d'un élément dans une carte." },
-      "body": { "displayName": "Body", "purpose": "Texte courant." },
-      "field": { "displayName": "Field", "purpose": "Texte des champs (16px pour éviter le zoom)." },
-      "label": { "displayName": "Label", "purpose": "Libellés et boutons." },
-      "meta": { "displayName": "Meta", "purpose": "Détails sous un titre de carte." },
-      "nav": { "displayName": "Nav", "purpose": "Libellés de la barre du bas." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titre de l'en-tête."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Titres de la fiche et des fenêtres."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Titres de section."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Nom d'un élément dans une carte."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texte courant."
+      },
+      "field": {
+        "displayName": "Field",
+        "purpose": "Texte des champs (16px pour éviter le zoom)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Libellés et boutons."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Détails sous un titre de carte."
+      },
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Libellés de la barre du bas."
+      }
     },
     "shadows": [
-      { "name": "carte", "value": "0 4px 14px rgba(0,0,0,.07)", "purpose": "Toutes les cartes du contenu." },
-      { "name": "photo", "value": "0 4px 12px rgba(0,0,0,.15)", "purpose": "Grande photo de la personne aidée." },
-      { "name": "barre-flottante", "value": "0 8px 24px rgba(0,0,0,.18)", "purpose": "Navigation du bas." },
-      { "name": "lueur-plein", "value": "0 4px 12px color-mix(in srgb, var(--c1) 35%, transparent)", "purpose": "Boutons pleins." },
-      { "name": "lueur-ajouter", "value": "0 8px 20px color-mix(in srgb, var(--c1) 45%, transparent)", "purpose": "Bouton +." }
+      {
+        "name": "carte",
+        "value": "0 4px 14px rgba(0,0,0,.07)",
+        "purpose": "Toutes les cartes du contenu."
+      },
+      {
+        "name": "photo",
+        "value": "0 4px 12px rgba(0,0,0,.15)",
+        "purpose": "Grande photo de la personne aidée."
+      },
+      {
+        "name": "barre-flottante",
+        "value": "0 8px 24px rgba(0,0,0,.18)",
+        "purpose": "Navigation du bas."
+      },
+      {
+        "name": "lueur-plein",
+        "value": "0 4px 12px color-mix(in srgb, var(--c1) 35%, transparent)",
+        "purpose": "Boutons pleins."
+      },
+      {
+        "name": "lueur-ajouter",
+        "value": "0 8px 20px color-mix(in srgb, var(--c1) 45%, transparent)",
+        "purpose": "Bouton +."
+      }
     ],
     "motion": [
-      { "name": "entre", "value": "0.35s ease, translateY(10px) vers 0", "purpose": "Entrée des cartes." },
-      { "name": "monte", "value": "0.25s ease, translateY(30px) scale(.97) vers 0", "purpose": "Ouverture des fenêtres." },
-      { "name": "presse", "value": "0.1s, scale(.95)", "purpose": "Bouton pressé." }
+      {
+        "name": "entre",
+        "value": "0.35s ease, translateY(10px) vers 0",
+        "purpose": "Entrée des cartes."
+      },
+      {
+        "name": "monte",
+        "value": "0.25s ease, translateY(30px) scale(.97) vers 0",
+        "purpose": "Ouverture des fenêtres."
+      },
+      {
+        "name": "presse",
+        "value": "0.1s, scale(.95)",
+        "purpose": "Bouton pressé."
+      }
     ],
     "breakpoints": []
   },
@@ -59,7 +285,7 @@
       "refersTo": "button-plein",
       "description": "Action principale d'une carte ou d'une fenêtre.",
       "html": "<button class=\"ds-btn-plein\">📱 Texter</button>",
-      "css": ".ds-btn-plein { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; color:#fff; background:linear-gradient(135deg, var(--c1, #ff6b6b), var(--c2, #ffa94d)); box-shadow:0 4px 12px color-mix(in srgb, var(--c1, #ff6b6b) 35%, transparent); cursor:pointer; transition:transform .1s; } .ds-btn-plein:active { transform:scale(.95); } .ds-btn-plein:focus-visible { outline:3px solid var(--c2, #ffa94d); outline-offset:2px; }"
+      "css": ".ds-btn-plein { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; color:#fff; background:linear-gradient(135deg, var(--f1, #d04045), var(--f2, #a96406)); box-shadow:0 4px 12px color-mix(in srgb, var(--c1, #ff6b6b) 35%, transparent); cursor:pointer; transition:transform .1s; } .ds-btn-plein:active { transform:scale(.95); } .ds-btn-plein:focus-visible { outline:3px solid var(--c2, #ffa94d); outline-offset:2px; }"
     },
     {
       "name": "Bouton doux",
@@ -67,7 +293,7 @@
       "refersTo": "button-doux",
       "description": "Action secondaire.",
       "html": "<button class=\"ds-btn-doux\">🔢 Recompter</button>",
-      "css": ".ds-btn-doux { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(151,117,250,.14); color:#9775fa; cursor:pointer; transition:transform .1s; } .ds-btn-doux:active { transform:scale(.95); } .ds-btn-doux:focus-visible { outline:3px solid #9775fa; outline-offset:2px; }"
+      "css": ".ds-btn-doux { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(151,117,250,.14); color:var(--mauve, #7651d2); cursor:pointer; transition:transform .1s; } .ds-btn-doux:active { transform:scale(.95); } .ds-btn-doux:focus-visible { outline:3px solid var(--mauve, #7651d2); outline-offset:2px; }"
     },
     {
       "name": "Bouton danger",
@@ -75,7 +301,7 @@
       "refersTo": "button-danger",
       "description": "Supprimer.",
       "html": "<button class=\"ds-btn-danger\">Supprimer</button>",
-      "css": ".ds-btn-danger { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(250,82,82,.12); color:#f03e3e; cursor:pointer; transition:transform .1s; } .ds-btn-danger:active { transform:scale(.95); } .ds-btn-danger:focus-visible { outline:3px solid #f03e3e; outline-offset:2px; }"
+      "css": ".ds-btn-danger { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(250,82,82,.12); color:var(--danger, #d31724); cursor:pointer; transition:transform .1s; } .ds-btn-danger:active { transform:scale(.95); } .ds-btn-danger:focus-visible { outline:3px solid var(--danger, #d31724); outline-offset:2px; }"
     },
     {
       "name": "Champ",
@@ -91,7 +317,7 @@
       "refersTo": "card",
       "description": "Carte type : bulle d'icône, titre, détail et pastille.",
       "html": "<div class=\"ds-carte\"><div class=\"ds-bulle\">💊</div><div><b class=\"ds-titre\">Lipitor 20 mg</b><span class=\"ds-petit\">Le matin</span><span class=\"ds-pastille-ok\">22 pilules environ</span></div></div>",
-      "css": ".ds-carte { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 4px 14px rgba(0,0,0,.07); display:flex; gap:12px; align-items:flex-start; font:600 17px/1.4 Nunito, sans-serif; color:#2b2140; } .ds-bulle { flex:none; width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; background:rgba(255,107,107,.16); } .ds-titre { display:block; font-size:18px; font-weight:800; } .ds-petit { display:block; color:#7a7090; font-size:15px; } .ds-pastille-ok { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:20px; font-size:14px; font-weight:800; background:rgba(56,217,169,.16); color:#12a37a; }"
+      "css": ".ds-carte { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 4px 14px rgba(0,0,0,.07); display:flex; gap:12px; align-items:flex-start; font:600 17px/1.4 Nunito, sans-serif; color:#2b2140; } .ds-bulle { flex:none; width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; background:rgba(255,107,107,.16); } .ds-titre { display:block; font-size:18px; font-weight:800; } .ds-petit { display:block; color:#7a7090; font-size:15px; } .ds-pastille-ok { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:20px; font-size:14px; font-weight:800; background:rgba(56,217,169,.16); color:var(--ok, #077c5c); }"
     },
     {
       "name": "Pastille alerte",
@@ -99,7 +325,7 @@
       "refersTo": "pastille-alerte",
       "description": "Alerte de fin de pot ou de renouvellement.",
       "html": "<span class=\"ds-pastille-alerte\">Renouveler le 4 nov.</span>",
-      "css": ".ds-pastille-alerte { display:inline-block; padding:3px 10px; border-radius:20px; font:800 14px Nunito, sans-serif; background:rgba(255,146,43,.16); color:#e8590c; }"
+      "css": ".ds-pastille-alerte { display:inline-block; padding:3px 10px; border-radius:20px; font:800 14px Nunito, sans-serif; background:rgba(255,146,43,.16); color:var(--alerte, #bc4502); }"
     },
     {
       "name": "Barre du bas",
@@ -115,28 +341,55 @@
       "refersTo": "bouton-ajouter",
       "description": "Bouton + flottant pour ajouter un élément.",
       "html": "<button class=\"ds-ajouter\" aria-label=\"Ajouter\">+</button>",
-      "css": ".ds-ajouter { width:60px; height:60px; border-radius:50%; border:0; font-size:32px; color:#fff; background:linear-gradient(135deg, var(--c2, #ffa94d), var(--c1, #ff6b6b)); box-shadow:0 8px 20px color-mix(in srgb, var(--c1, #ff6b6b) 45%, transparent); cursor:pointer; transition:transform .1s; } .ds-ajouter:active { transform:scale(.95); } .ds-ajouter:focus-visible { outline:3px solid var(--c1, #ff6b6b); outline-offset:3px; }"
+      "css": ".ds-ajouter { width:60px; height:60px; border-radius:50%; border:0; font-size:32px; color:#fff; background:linear-gradient(135deg, var(--f2, #a96406), var(--f1, #d04045)); box-shadow:0 8px 20px color-mix(in srgb, var(--c1, #ff6b6b) 45%, transparent); cursor:pointer; transition:transform .1s; } .ds-ajouter:active { transform:scale(.95); } .ds-ajouter:focus-visible { outline:3px solid var(--c1, #ff6b6b); outline-offset:3px; }"
     }
   ],
   "narrative": {
     "northStar": "Le carnet de bord chaleureux",
     "overview": "Famillo est le carnet que l'aidant traîne partout : tout y est en ordre, daté, facile à retrouver, mais il garde la douceur d'un carnet tenu à la main. L'ordre vient d'une seule colonne de cartes claires (fiche, médicaments, rendez-vous, tâches, famille); la chaleur vient du dégradé de l'en-tête, du fond crème, des coins ronds et de la police Nunito, ronde et amicale.\n\nLa densité est faible : une idée par carte, de gros titres, beaucoup d'air. L'interface est faite pour être lue d'un coup d'œil entre deux obligations, et pour être touchée avec confiance par un aîné. Les boutons et les cartes doivent paraître solides et rassurants : gros, stables, bien contrastés, faciles à viser.\n\nFamillo ne doit jamais avoir l'air d'un hôpital ou d'une clinique (blanc froid, bleu médical, dossier patient), d'une app pour enfants (trop bonbon, trop ludique : les aidants vivent des moments graves), ni d'une banque ou d'un outil corporatif (gris, sec, dense, jargon).",
     "keyCharacteristics": [
-      "En-tête en dégradé de la couleur du thème, arrondi en bas, qui chevauche le contenu.",
+      "En-tête en dégradé des couleurs foncées du thème, arrondi en bas, qui chevauche le contenu.",
       "Une seule colonne de cartes blanches sur fond crème, max 640px.",
       "Nunito partout, poids lourds (800-900) pour les titres, 600 pour le texte.",
       "Couleur du thème au choix (6 thèmes); les couleurs de sens (ok, alerte, danger) ne changent jamais.",
+      "Tout texte passe 4,5:1, dans les 6 thèmes et dans les 2 modes.",
       "Mode Auto/Clair/Sombre complet, avec un fond nuit prune plutôt que noir."
     ],
     "rules": [
-      { "name": "La règle du thème qui voyage", "body": "L'identité vit dans --c1/--c2 seulement. Une couleur de marque écrite en dur casse 5 thèmes sur 6.", "section": "colors" },
-      { "name": "La règle du sens fixe", "body": "Vert, orange et rouge veulent toujours dire ok, alerte et danger, dans tous les thèmes. On ne les utilise jamais pour décorer.", "section": "colors" },
-      { "name": "La règle du gras qui guide", "body": "On hiérarchise avec le poids : 900 pour les titres, 800 pour ce qu'on touche, 600 pour ce qu'on lit. Jamais de texte sous 600.", "section": "typography" },
-      { "name": "La règle de l'ombre douce", "body": "Ombre floue et basse opacité seulement. Une ombre dure ou décalée n'a pas sa place dans un carnet chaleureux.", "section": "elevation" },
-      { "name": "La règle du rond pour les gens", "body": "Le cercle est réservé aux personnes et au bouton d'ajout; le reste est un rectangle arrondi.", "section": "shapes" }
+      {
+        "name": "La règle du thème qui voyage",
+        "body": "L'identité vit dans --c1/--c2 seulement. Une couleur de marque écrite en dur casse 5 thèmes sur 6.",
+        "section": "colors"
+      },
+      {
+        "name": "La règle du sens fixe",
+        "body": "Vert, orange et rouge veulent toujours dire ok, alerte et danger, dans tous les thèmes. On ne les utilise jamais pour décorer.",
+        "section": "colors"
+      },
+      {
+        "name": "La règle du blanc lisible",
+        "section": "colors",
+        "body": "Le texte blanc se pose seulement sur les foncées (--f1/--f2), jamais sur les vives. Tout texte coloré sur une teinte claire utilise sa version « texte » foncée (ou « nuit » en mode sombre). Minimum 4,5:1 partout."
+      },
+      {
+        "name": "La règle du gras qui guide",
+        "body": "On hiérarchise avec le poids : 900 pour les titres, 800 pour ce qu'on touche, 600 pour ce qu'on lit. Jamais de texte sous 600.",
+        "section": "typography"
+      },
+      {
+        "name": "La règle de l'ombre douce",
+        "body": "Ombre floue et basse opacité seulement. Une ombre dure ou décalée n'a pas sa place dans un carnet chaleureux.",
+        "section": "elevation"
+      },
+      {
+        "name": "La règle du rond pour les gens",
+        "body": "Le cercle est réservé aux personnes et au bouton d'ajout; le reste est un rectangle arrondi.",
+        "section": "shapes"
+      }
     ],
     "dos": [
-      "Do passer toute couleur de marque par --c1/--c2 pour qu'elle suive les 6 thèmes.",
+      "Do passer toute couleur de marque par --c1/--c2 (accents) ou --f1/--f2 (surfaces sous texte blanc) pour qu'elle suive les 6 thèmes.",
+      "Do vérifier 4,5:1 pour tout nouveau texte, dans les 6 thèmes et les 2 modes.",
       "Do définir chaque nouvelle surface pour les deux modes (clair crème, sombre prune) avec les neutres existants.",
       "Do garder une seule colonne de cartes de 20px de rayon, max 640px.",
       "Do utiliser Nunito à 600 minimum, 800-900 pour titres et boutons.",
@@ -149,7 +402,8 @@
       "Don't faire corporatif : pas de gris sec, de tableaux denses ni de jargon.",
       "Don't utiliser vert, orange ou rouge pour décorer : ils veulent dire ok, alerte et danger.",
       "Don't utiliser des ombres dures ou décalées.",
-      "Don't utiliser le noir pur ou le blanc pur comme fond de page."
+      "Don't utiliser le noir pur ou le blanc pur comme fond de page.",
+      "Don't poser du texte blanc sur les couleurs vives du thème, ni baisser l'opacité d'un texte de l'en-tête."
     ]
   }
 }
