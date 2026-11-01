@@ -14,14 +14,14 @@
   @font-face { font-family:Nunito; src:url(nunito.woff2) format('woff2'); font-weight:200 1000; font-display:swap; }
   :root {
     /* --c1/--c2 : couleurs vives du thème (accents). --f1/--f2 : même teinte, assez foncée pour du texte blanc (4,5:1). */
-    --c1:#ff6b6b; --c2:#ffa94d; --f1:#d04045; --f2:#a96406; --mauve:#7651d2; --ok:#077c5c; --alerte:#bc4502; --danger:#d31724;
-    --fond:#fff8f0; --carte:#fff; --carte2:#fff4e6; --texte:#2b2140; --doux:#7a7090; --champ:#fffcf8; --bord:#f0e6dc;
+    --c1:#ff6b6b; --c2:#ffa94d; --f1:#d04045; --f2:#a96406; --mauve:#724ccd; --ok:#077c5c; --alerte:#bc4502; --danger:#d31724;
+    --fond:#fff8f0; --carte:#fff; --carte2:#fff4e6; --texte:#2b2140; --doux:#746a8a; --champ:#fffcf8; --bord:#f0e6dc;
     color-scheme:light;
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-mode=clair]) { --fond:#17131f; --carte:#241e30; --carte2:#2d2540; --texte:#f3eefc; --doux:#a89fbd; --champ:#1d1827; --bord:#3a3150; --mauve:#a286fe; --ok:#37b88d; --alerte:#ff7941; --danger:#ff5e58; color-scheme:dark; }
+    :root:not([data-mode=clair]) { --fond:#17131f; --carte:#241e30; --carte2:#2d2540; --texte:#f3eefc; --doux:#a89fbd; --champ:#1d1827; --bord:#3a3150; --mauve:#a991fe; --ok:#37b88d; --alerte:#ff7941; --danger:#ff5e58; color-scheme:dark; }
   }
-  :root[data-mode=sombre] { --fond:#17131f; --carte:#241e30; --carte2:#2d2540; --texte:#f3eefc; --doux:#a89fbd; --champ:#1d1827; --bord:#3a3150; --mauve:#a286fe; --ok:#37b88d; --alerte:#ff7941; --danger:#ff5e58; color-scheme:dark; }
+  :root[data-mode=sombre] { --fond:#17131f; --carte:#241e30; --carte2:#2d2540; --texte:#f3eefc; --doux:#a89fbd; --champ:#1d1827; --bord:#3a3150; --mauve:#a991fe; --ok:#37b88d; --alerte:#ff7941; --danger:#ff5e58; color-scheme:dark; }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body { margin:0; font:600 17px/1.4 Nunito, system-ui, sans-serif; background:var(--fond); color:var(--texte); padding-bottom:96px; }
   header { background:linear-gradient(135deg, var(--f1), var(--f2)); color:#fff; padding:22px 18px 56px; border-radius:0 0 32px 32px; position:relative; overflow:hidden; text-shadow:0 1px 4px rgba(0,0,0,.2); }
@@ -37,7 +37,7 @@
   nav { position:fixed; bottom:12px; left:12px; right:12px; display:flex; background:var(--carte); border-radius:24px; padding:6px; box-shadow:0 8px 24px rgba(0,0,0,.18); max-width:616px; margin:auto; }
   nav button { flex:1; border:0; background:none; padding:6px 2px; font:700 11px Nunito, sans-serif; color:var(--doux); border-radius:18px; transition:.2s; }
   nav button span { display:block; font-size:24px; transition:transform .2s; }
-  nav button.actif { background:color-mix(in srgb, var(--c1) 15%, transparent); color:var(--c1); }
+  nav button.actif { background:color-mix(in srgb, var(--c1) 15%, transparent); color:var(--texte); font-weight:800; }
   nav button.actif span { transform:scale(1.2) translateY(-2px); }
   .carte { background:var(--carte); border-radius:20px; padding:14px 16px; margin-bottom:12px; box-shadow:0 4px 14px rgba(0,0,0,.07); display:flex; gap:12px; align-items:flex-start; animation:entre .35s ease both; }
   .carte .corps { flex:1; min-width:0; }
@@ -196,7 +196,8 @@ const nomDe = id => (d.famille.find(p => p.id === id) || {}).nom;
 const dateFr = s => s ? new Date(s).toLocaleString(locale(), { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }) : '';
 const jourFr = s => s ? new Date(s + 'T12:00').toLocaleDateString(locale(), { day:'numeric', month:'long' }) : '';
 const dansJours = (s, n) => s && (new Date(s) - Date.now()) < n * 864e5;
-const COULEURS = ['#ff6b6b','#ffa94d','#38d9a9','#4dabf7','#9775fa','#f783ac'];
+// Assez foncées pour la lettre blanche (4,5:1).
+const COULEURS = ['#d04045','#a96406','#088564','#0579c1','#805cde','#bc4e79'];
 const avatar = p => p.photo ? `<img class="avatar" src="${esc(p.photo)}" alt="">`
   : `<div class="avatar" style="background:${COULEURS[parseInt(p.id, 36) % COULEURS.length]}">${esc((p.nom || '?')[0].toUpperCase())}</div>`;
 

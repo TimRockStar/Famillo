@@ -7,7 +7,7 @@ colors:
   corail-fonce: "#d04045"
   abricot-fonce: "#a96406"
   mauve: "#9775fa"
-  mauve-texte: "#7651d2"
+  mauve-texte: "#724ccd"
   bleu-rdv: "#4dabf7"
   menthe-taches: "#38d9a9"
   vert-ok: "#077c5c"
@@ -21,7 +21,7 @@ colors:
   champ: "#fffcf8"
   bord-sable: "#f0e6dc"
   encre-prune: "#2b2140"
-  lavande-douce: "#7a7090"
+  lavande-douce: "#746a8a"
   nuit-fond: "#17131f"
   nuit-carte: "#241e30"
   nuit-carte2: "#2d2540"
@@ -29,7 +29,7 @@ colors:
   nuit-bord: "#3a3150"
   nuit-texte: "#f3eefc"
   nuit-doux: "#a89fbd"
-  nuit-mauve-texte: "#a286fe"
+  nuit-mauve-texte: "#a991fe"
   nuit-ok: "#37b88d"
   nuit-alerte: "#ff7941"
   nuit-danger: "#ff5e58"
@@ -277,7 +277,7 @@ Solides et rassurants : gros, contrastés, avec un léger enfoncement quand on a
 
 ### Navigation
 - **Style:** barre flottante blanche (24px de rayon) en bas de l'écran, onglets égaux : icône de 24px au-dessus d'un libellé 700 11px en lavande douce.
-- **Actif:** fond `--c1` à 15 %, texte `--c1`, icône agrandie (1.2) et remontée de 2px.
+- **Actif:** fond `--c1` à 15 %, texte encre prune (`--texte`) en 800 pour rester lisible dans tous les thèmes, icône agrandie (1.2) et remontée de 2px.
 
 ### Fenêtres (dialog)
 - Carte de 26px de rayon, largeur min(92vw, 480px), fond assombri prune à 50 %. Monte de 30px en 0.25s à l'ouverture.

@@ -293,7 +293,7 @@
       "refersTo": "button-doux",
       "description": "Action secondaire.",
       "html": "<button class=\"ds-btn-doux\">🔢 Recompter</button>",
-      "css": ".ds-btn-doux { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(151,117,250,.14); color:var(--mauve, #7651d2); cursor:pointer; transition:transform .1s; } .ds-btn-doux:active { transform:scale(.95); } .ds-btn-doux:focus-visible { outline:3px solid var(--mauve, #7651d2); outline-offset:2px; }"
+      "css": ".ds-btn-doux { border:0; border-radius:14px; padding:10px 16px; font:800 15px Nunito, sans-serif; background:rgba(151,117,250,.14); color:var(--mauve, #724ccd); cursor:pointer; transition:transform .1s; } .ds-btn-doux:active { transform:scale(.95); } .ds-btn-doux:focus-visible { outline:3px solid var(--mauve, #724ccd); outline-offset:2px; }"
     },
     {
       "name": "Bouton danger",
@@ -317,7 +317,7 @@
       "refersTo": "card",
       "description": "Carte type : bulle d'icône, titre, détail et pastille.",
       "html": "<div class=\"ds-carte\"><div class=\"ds-bulle\">💊</div><div><b class=\"ds-titre\">Lipitor 20 mg</b><span class=\"ds-petit\">Le matin</span><span class=\"ds-pastille-ok\">22 pilules environ</span></div></div>",
-      "css": ".ds-carte { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 4px 14px rgba(0,0,0,.07); display:flex; gap:12px; align-items:flex-start; font:600 17px/1.4 Nunito, sans-serif; color:#2b2140; } .ds-bulle { flex:none; width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; background:rgba(255,107,107,.16); } .ds-titre { display:block; font-size:18px; font-weight:800; } .ds-petit { display:block; color:#7a7090; font-size:15px; } .ds-pastille-ok { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:20px; font-size:14px; font-weight:800; background:rgba(56,217,169,.16); color:var(--ok, #077c5c); }"
+      "css": ".ds-carte { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 4px 14px rgba(0,0,0,.07); display:flex; gap:12px; align-items:flex-start; font:600 17px/1.4 Nunito, sans-serif; color:#2b2140; } .ds-bulle { flex:none; width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; background:rgba(255,107,107,.16); } .ds-titre { display:block; font-size:18px; font-weight:800; } .ds-petit { display:block; color:#746a8a; font-size:15px; } .ds-pastille-ok { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:20px; font-size:14px; font-weight:800; background:rgba(56,217,169,.16); color:var(--ok, #077c5c); }"
     },
     {
       "name": "Pastille alerte",
@@ -333,7 +333,7 @@
       "refersTo": "nav-bar",
       "description": "Navigation flottante par onglets.",
       "html": "<nav class=\"ds-nav\"><button class=\"ds-onglet ds-actif\"><span>🏠</span>Accueil</button><button class=\"ds-onglet\"><span>💊</span>Médicaments</button><button class=\"ds-onglet\"><span>📅</span>Rendez-vous</button></nav>",
-      "css": ".ds-nav { display:flex; background:#fff; border-radius:24px; padding:6px; box-shadow:0 8px 24px rgba(0,0,0,.18); } .ds-onglet { flex:1; border:0; background:none; padding:6px 2px; font:700 11px Nunito, sans-serif; color:#7a7090; border-radius:18px; cursor:pointer; transition:.2s; } .ds-onglet span { display:block; font-size:24px; transition:transform .2s; } .ds-onglet:hover { color:var(--c1, #ff6b6b); } .ds-actif { background:color-mix(in srgb, var(--c1, #ff6b6b) 15%, transparent); color:var(--c1, #ff6b6b); } .ds-actif span { transform:scale(1.2) translateY(-2px); } .ds-onglet:focus-visible { outline:3px solid var(--c1, #ff6b6b); }"
+      "css": ".ds-nav { display:flex; background:#fff; border-radius:24px; padding:6px; box-shadow:0 8px 24px rgba(0,0,0,.18); } .ds-onglet { flex:1; border:0; background:none; padding:6px 2px; font:700 11px Nunito, sans-serif; color:#746a8a; border-radius:18px; cursor:pointer; transition:.2s; } .ds-onglet span { display:block; font-size:24px; transition:transform .2s; } .ds-onglet:hover { color:var(--c1, #ff6b6b); } .ds-actif { background:color-mix(in srgb, var(--c1, #ff6b6b) 15%, transparent); color:#2b2140; font-weight:800; } .ds-actif span { transform:scale(1.2) translateY(-2px); } .ds-onglet:focus-visible { outline:3px solid var(--c1, #ff6b6b); }"
     },
     {
       "name": "Bouton d'ajout",
