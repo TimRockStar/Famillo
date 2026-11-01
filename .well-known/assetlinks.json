@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "ca.famillo.app",
+    "sha256_cert_fingerprints": [
+      "E3:4D:CF:C4:2A:1A:E8:BF:3B:BA:92:BF:01:6B:F6:E5:06:7E:05:0A:46:92:F9:51:31:5A:40:5E:2E:79:9D:2B"
+    ]
+  }
+}]

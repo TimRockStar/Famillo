@@ -138,7 +138,7 @@ const TXT = {
     fondEcran:'Photo d\'arrière-plan (en haut)', choisirPhoto:'📷 Choisir une photo', retirer:'Retirer',
     plein:'Le téléphone manque de place pour les photos. Retire une photo ou choisis-en une plus petite.',
     th_corail:'Corail', th_ocean:'Océan', th_foret:'Forêt', th_lavande:'Lavande', th_soleil:'Soleil', th_baie:'Petits fruits',
-    suggerer:'💡 Suggérer une idée', demandes:'✅ Vous l\'avez demandé', propulse:'Propulsé par',
+    suggerer:'💡 Suggérer une idée', demandes:'✅ Vous l\'avez demandé', propulse:'Propulsé par', confid:'Confidentialité',
     sujetIdee:'Famillo : une idée', corpsIdee:'Bonjour ! Ce serait le fun si Famillo pouvait : ',
     demandesIntro:'Les idées des utilisateurs qu\'on a ajoutées. On lit toutes les suggestions !',
     demandesVide:'Aucune encore. Ta suggestion pourrait être la première sur cette liste !',
@@ -187,7 +187,7 @@ const TXT = {
     fondEcran:'Background photo (top)', choisirPhoto:'📷 Choose a photo', retirer:'Remove',
     plein:'The phone is out of room for photos. Remove a photo or pick a smaller one.',
     th_corail:'Coral', th_ocean:'Ocean', th_foret:'Forest', th_lavande:'Lavender', th_soleil:'Sunshine', th_baie:'Berries',
-    suggerer:'💡 Suggest an idea', demandes:'✅ You asked, we did it', propulse:'Powered by',
+    suggerer:'💡 Suggest an idea', demandes:'✅ You asked, we did it', propulse:'Powered by', confid:'Privacy',
     sujetIdee:'Famillo: an idea', corpsIdee:'Hi! It would be great if Famillo could: ',
     demandesIntro:'Ideas from users that we added. We read every suggestion!',
     demandesVide:'None yet. Your suggestion could be the first on this list!',
@@ -329,7 +329,7 @@ function afficher() {
       <button class="btn" onclick="sauvegarde()">${t('sauvegarde')}</button>
       <a class="btn" href="mailto:bonjour@lancetonapp.com?subject=${encodeURIComponent(t('sujetIdee'))}&body=${encodeURIComponent(t('corpsIdee'))}">${t('suggerer')}</a>
       <button class="btn" onclick="voirDemandes()">${t('demandes')}</button></div>
-    <p>${t('propulse')} <a href="https://lancetonapp.com" target="_blank" rel="noopener">Lance ton app</a></p></footer>`;
+    <p>${t('propulse')} <a href="https://lancetonapp.com" target="_blank" rel="noopener">Lance ton app</a> · <a href="confidentialite.html${lang === 'en' ? '#en' : ''}">${t('confid')}</a></p></footer>`;
 }
 
 // Idées des utilisateurs ajoutées à l'app : [fr, en] ; à remplir à chaque mise à jour.
