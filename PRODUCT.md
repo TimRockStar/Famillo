@@ -34,7 +34,7 @@ Rien à installer pour la famille. Seul l'aidant a l'app; les proches reçoivent
 - Un seul fichier `index.html`, plus `manifest.json` et `sw.js`, sans framework. Hébergé sur GitHub Pages à https://famillo.ca.
 - Données et photos dans localStorage (environ 5 Mo, sur le téléphone seulement). Pas de synchronisation entre appareils, pas de sauvegarde en ligne.
 - L'app ne sonne pas pour que la personne aidée prenne ses pilules : elle sert à l'aidant.
-- Prix : un seul prix fixe, sans options payantes. **Montant à décider.**
+- Prix : un seul prix fixe, sans options payantes. **14,99 $ au lancement, puis 19,99 $.**
 
 ## Brand Commitments
 - Nom : Famillo (domaine famillo.ca). Logo : `logo-famillo.jpg` et les icônes PNG.
