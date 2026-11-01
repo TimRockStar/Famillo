@@ -30,7 +30,7 @@
   header .haut { display:flex; justify-content:space-between; align-items:center; gap:8px; position:relative; z-index:1; }
   header .app img { width:30px; height:30px; border-radius:50%; background:#fff; vertical-align:middle; margin-right:6px; padding:2px; }
   header .app { font-weight:900; font-size:15px; letter-spacing:.5px; flex:1; }
-  .rond { border:2px solid rgba(255,255,255,.7); background:rgba(0,0,0,.18); color:#fff; border-radius:20px; padding:4px 12px; font:800 14px Nunito, sans-serif; cursor:pointer; }
+  .rond { border:2px solid rgba(255,255,255,.7); background:rgba(0,0,0,.18); color:#fff; border-radius:22px; min-height:44px; min-width:44px; padding:4px 14px; font:800 14px Nunito, sans-serif; cursor:pointer; }
   header h1 { margin:14px 0 0; font-size:26px; font-weight:900; position:relative; z-index:1; }
   header p { margin:4px 0 0; position:relative; z-index:1; }
   main { padding:0 16px; max-width:640px; margin:-36px auto 0; position:relative; }
@@ -109,7 +109,7 @@ const THEMES = { corail:['#ff6b6b','#ffa94d','#d04045','#a96406'], ocean:['#1c7e
 
 const TXT = {
   fr: {
-    autre:'EN', accueil:'Accueil', meds:'Médicaments', rdv:'Rendez-vous', taches:'Tâches', famille:'Famille',
+    autre:'EN', accueil:'Accueil', meds:'Médicaments', rdv:'Rendez-vous', agenda:'Agenda', taches:'Tâches', famille:'Famille',
     bonjour:'Bonjour ! 👋', semaineDe: n => `Voici la semaine de ${n}`, laPersonne:'la personne aidée', personneAidee:'Personne aidée',
     medecin:'Médecin', ramq:'Assurance maladie', modifierFiche:'Modifier la fiche', cetteSemaine:'Cette semaine',
     rienSemaine:'Semaine tranquille ! Rien à prévoir.', rien:'Rien pour l\'instant. Appuie sur + pour commencer !',
@@ -146,7 +146,7 @@ const TXT = {
     msgTache: (p, a, t) => `Bonjour ${p}, peux-tu t'occuper de : ${t.quoi}, pour ${a} ? Réponds-moi par texto. Merci !`,
   },
   en: {
-    autre:'FR', accueil:'Home', meds:'Meds', rdv:'Appointments', taches:'Tasks', famille:'Family',
+    autre:'FR', accueil:'Home', meds:'Meds', rdv:'Appointments', agenda:'Calendar', taches:'Tasks', famille:'Family',
     bonjour:'Hi there! 👋', semaineDe: n => `Here's ${n}'s week`, laPersonne:'your loved one', personneAidee:'Loved one',
     medecin:'Doctor', ramq:'Health card', modifierFiche:'Edit profile', cetteSemaine:'This week',
     rienSemaine:'A quiet week! Nothing planned.', rien:'Nothing yet. Tap + to get started!',
@@ -299,7 +299,7 @@ function afficher() {
   $('perso').textContent = t('personnaliser');
   $('titre').textContent = onglet === 'accueil' ? t('bonjour') : LISTES[onglet].ico + ' ' + t(onglet);
   $('sousTitre').textContent = onglet === 'accueil' ? t('semaineDe')(nomAide()) : '';
-  $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" ${id === onglet ? 'aria-current="page"' : ''} onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id)}</button>`).join('');
+  $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" ${id === onglet ? 'aria-current="page"' : ''} onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id === 'rdv' ? 'agenda' : id)}</button>`).join('');
   $('page').innerHTML = (onglet === 'accueil' ? accueil() : liste(onglet)) + `<footer><div class="boutons">
       <a class="btn" href="mailto:bonjour@lancetonapp.com?subject=${encodeURIComponent(t('sujetIdee'))}&body=${encodeURIComponent(t('corpsIdee'))}">${t('suggerer')}</a>
       <button class="btn" onclick="voirDemandes()">${t('demandes')}</button></div>
