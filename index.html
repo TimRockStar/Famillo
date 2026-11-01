@@ -142,6 +142,18 @@ const TXT = {
     sujetIdee:'Famillo : une idée', corpsIdee:'Bonjour ! Ce serait le fun si Famillo pouvait : ',
     demandesIntro:'Les idées des utilisateurs qu\'on a ajoutées. On lit toutes les suggestions !',
     demandesVide:'Aucune encore. Ta suggestion pourrait être la première sur cette liste !',
+    sauvegarde:'💾 Sauvegarde', exporter:'📤 Exporter', importer:'📥 Importer',
+    sauvIntro:'Crée un fichier chiffré avec toutes les données de Famillo, photos comprises, pour les garder en lieu sûr ou les mettre sur un autre téléphone. Tout se fait sur ce téléphone, rien n\'est envoyé sur Internet.',
+    avisMdp:'⚠️ Si tu perds le mot de passe, personne ne pourra ouvrir le fichier, même pas nous. Les données qu\'il contient seront perdues pour de bon. Note-le en lieu sûr.',
+    mdp:'Mot de passe (8 caractères minimum)', mdp2:'Répète le mot de passe', mdpFichier:'Mot de passe du fichier', fichier:'Fichier de sauvegarde Famillo (.json)',
+    mdpDifferent:'Les deux mots de passe ne sont pas pareils.', enCours:'Un instant…',
+    exportOk:'✅ Fichier créé. Garde-le en lieu sûr avec ton mot de passe.',
+    remplacer:'Remplacer toutes les données actuelles de Famillo par celles du fichier ? Les données actuelles seront effacées.',
+    importAnnule:'Import annulé. Rien n\'a été changé.', importOk:'✅ Données importées.',
+    importPlein:'Le téléphone manque de place pour ces données. Rien n\'a été changé.',
+    erreurFichier:'Ce fichier n\'est pas une sauvegarde Famillo valide. Rien n\'a été changé.',
+    erreurVersion:'Cette sauvegarde vient d\'une version plus récente de Famillo. Mets l\'app à jour, puis réessaie. Rien n\'a été changé.',
+    erreurMdp:'Mauvais mot de passe, ou fichier abîmé. Rien n\'a été changé.',
     msgRdv: (p, a, r, quand) => `Bonjour ${p}, ${a} a un rendez-vous : ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Peux-tu t'en occuper ? Réponds-moi par texto. Merci !`,
     msgTache: (p, a, t) => `Bonjour ${p}, peux-tu t'occuper de : ${t.quoi}, pour ${a} ? Réponds-moi par texto. Merci !`,
   },
@@ -179,6 +191,18 @@ const TXT = {
     sujetIdee:'Famillo: an idea', corpsIdee:'Hi! It would be great if Famillo could: ',
     demandesIntro:'Ideas from users that we added. We read every suggestion!',
     demandesVide:'None yet. Your suggestion could be the first on this list!',
+    sauvegarde:'💾 Backup', exporter:'📤 Export', importer:'📥 Import',
+    sauvIntro:'Creates an encrypted file with all your Famillo data, photos included, to keep somewhere safe or move to another phone. Everything happens on this phone; nothing is sent over the Internet.',
+    avisMdp:'⚠️ If you lose the password, nobody can open the file, not even us. The data in it will be lost for good. Write it down somewhere safe.',
+    mdp:'Password (at least 8 characters)', mdp2:'Repeat the password', mdpFichier:'File password', fichier:'Famillo backup file (.json)',
+    mdpDifferent:'The two passwords don\'t match.', enCours:'One moment…',
+    exportOk:'✅ File created. Keep it somewhere safe with your password.',
+    remplacer:'Replace all current Famillo data with the data in the file? The current data will be erased.',
+    importAnnule:'Import cancelled. Nothing was changed.', importOk:'✅ Data imported.',
+    importPlein:'The phone is out of room for this data. Nothing was changed.',
+    erreurFichier:'This file is not a valid Famillo backup. Nothing was changed.',
+    erreurVersion:'This backup comes from a newer version of Famillo. Update the app, then try again. Nothing was changed.',
+    erreurMdp:'Wrong password, or damaged file. Nothing was changed.',
     msgRdv: (p, a, r, quand) => `Hi ${p}, ${a} has an appointment: ${r.quoi}, ${quand}${r.lieu ? ' (' + r.lieu + ')' : ''}. Can you take care of it? Text me back. Thanks!`,
     msgTache: (p, a, t) => `Hi ${p}, can you take care of: ${t.quoi}, for ${a}? Text me back. Thanks!`,
   },
@@ -302,6 +326,7 @@ function afficher() {
   $('sousTitre').textContent = onglet === 'accueil' ? t('semaineDe')(nomAide()) : '';
   $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" ${id === onglet ? 'aria-current="page"' : ''} onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id === 'rdv' ? 'agenda' : id)}</button>`).join('');
   $('page').innerHTML = (onglet === 'accueil' ? accueil() : liste(onglet)) + `<footer><div class="boutons">
+      <button class="btn" onclick="sauvegarde()">${t('sauvegarde')}</button>
       <a class="btn" href="mailto:bonjour@lancetonapp.com?subject=${encodeURIComponent(t('sujetIdee'))}&body=${encodeURIComponent(t('corpsIdee'))}">${t('suggerer')}</a>
       <button class="btn" onclick="voirDemandes()">${t('demandes')}</button></div>
     <p>${t('propulse')} <a href="https://lancetonapp.com" target="_blank" rel="noopener">Lance ton app</a></p></footer>`;
@@ -314,6 +339,114 @@ function voirDemandes() {
   $('dlg').innerHTML = `<h2>${t('demandes')}</h2><p class="petit">${t('demandesIntro')}</p>` +
     (DEMANDES.length ? DEMANDES.map(x => `<div class="carte"><span>✅</span><div class="corps">${esc(x[lang === 'fr' ? 0 : 1])}</div></div>`).join('') : `<div class="vide"><span>💡</span>${t('demandesVide')}</div>`) +
     `<div class="boutons"><button class="btn" onclick="$('dlg').close()">${t('fermer')}</button></div>`;
+  montrer();
+}
+
+// Sauvegarde chiffrée, tout dans le navigateur (aucun serveur) : PBKDF2-SHA256 dérive une clé du mot de passe,
+// puis AES-GCM 256 chiffre et authentifie les données. Le format et le nombre de tours sont aussi authentifiés.
+const SAUV = { app: 'famillo', format: 1, tours: 600000 };
+const octets = s => new TextEncoder().encode(s);
+const versB64 = u => { let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+const deB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const entete = (format, tours) => octets(`${SAUV.app}|${format}|${tours}`);
+
+async function cleDe(mdp, sel, tours) {
+  const base = await crypto.subtle.importKey('raw', octets(mdp.normalize('NFC')), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: sel, iterations: tours }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+
+async function chiffrer(donnees, mdp) {
+  const sel = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const clair = octets(JSON.stringify({ app: SAUV.app, version: SAUV.format, date: new Date().toISOString(), d: donnees }));
+  const ch = await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData: entete(SAUV.format, SAUV.tours) }, await cleDe(mdp, sel, SAUV.tours), clair);
+  return JSON.stringify({ app: SAUV.app, format: SAUV.format, kdf: 'PBKDF2-SHA256', tours: SAUV.tours, sel: versB64(sel), iv: versB64(iv), donnees: versB64(new Uint8Array(ch)) });
+}
+
+// Lance une clé de texte (erreurFichier, erreurVersion, erreurMdp) au moindre doute ; ne touche jamais à d.
+async function dechiffrer(texte, mdp) {
+  let e, x, sel, iv, ch, clair;
+  try { e = JSON.parse(texte); } catch { throw 'erreurFichier'; }
+  if (!e || e.app !== SAUV.app || !Number.isInteger(e.format)) throw 'erreurFichier';
+  if (e.format > SAUV.format) throw 'erreurVersion';
+  // Le plafond de tours évite qu'un fichier piégé bloque le téléphone.
+  if (e.format !== 1 || e.kdf !== 'PBKDF2-SHA256' || !Number.isInteger(e.tours) || e.tours < 100000 || e.tours > 5000000) throw 'erreurFichier';
+  try { sel = deB64(e.sel); iv = deB64(e.iv); ch = deB64(e.donnees); } catch { throw 'erreurFichier'; }
+  if (sel.length !== 16 || iv.length !== 12 || ch.length < 17) throw 'erreurFichier';
+  try { clair = await crypto.subtle.decrypt({ name: 'AES-GCM', iv, additionalData: entete(e.format, e.tours) }, await cleDe(mdp, sel, e.tours), ch); }
+  catch { throw 'erreurMdp'; }
+  try { x = JSON.parse(new TextDecoder().decode(clair)); } catch { throw 'erreurFichier'; }
+  if (!x || x.app !== SAUV.app || !Number.isInteger(x.version)) throw 'erreurFichier';
+  if (x.version > SAUV.format) throw 'erreurVersion';
+  return valider(x.d);
+}
+
+// Recopie seulement les champs connus, avec les bons types : un fichier modifié ne peut pas injecter de code dans les onclick.
+function valider(s) {
+  const objet = v => { if (!v || typeof v !== 'object' || Array.isArray(v)) throw 'erreurFichier'; return v; };
+  const texte = (v, max = 2000) => { if (typeof v !== 'string' || v.length > max) throw 'erreurFichier'; return v; };
+  const nombre = v => { if (typeof v !== 'number' || !Number.isFinite(v)) throw 'erreurFichier'; return v; };
+  const ident = v => { if (typeof v !== 'string' || !/^[a-z0-9]{1,24}$/.test(v)) throw 'erreurFichier'; return v; };
+  const photo = v => { if (v !== '' && !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(texte(v, 3e6))) throw 'erreurFichier'; return v; };
+  const copie = (o, champs, special = {}) => {
+    const r = {};
+    for (const k of champs) if (k in o) r[k] = special[k] ? special[k](o[k]) : texte(o[k], k === 'notes' ? 10000 : 2000);
+    return r;
+  };
+  const liste = (v, champs, special) => {
+    if (!Array.isArray(v) || v.length > 1000) throw 'erreurFichier';
+    const vus = new Set();
+    return v.map(o => { const r = copie(objet(o), ['id', ...champs], { id: ident, ...special }); if (!r.id || vus.has(r.id)) throw 'erreurFichier'; vus.add(r.id); return r; });
+  };
+  const qui = v => v === '' ? v : ident(v);
+  objet(s);
+  const r = objet(s.reglages ?? {});
+  return {
+    aide: copie(objet(s.aide ?? {}), ['nom', 'photo', 'medecin', 'ramq', 'notes'], { photo }),
+    meds: liste(s.meds, ['nom', 'parJour', 'debut', 'qte', 'dose', 'heure', 'renouv', 'compte', 'oublis'], {
+      compte: c => { objet(c); return { reste: nombre(c.reste), date: texte(c.date, 10), ecart: nombre(c.ecart) }; },
+      oublis: v => typeof v === 'number' ? nombre(v) : texte(v, 10) }),
+    rdv: liste(s.rdv, ['quoi', 'quand', 'lieu', 'qui'], { qui }),
+    taches: liste(s.taches, ['quoi', 'qui'], { qui }),
+    famille: liste(s.famille, ['nom', 'tel', 'photo'], { photo }),
+    reglages: { theme: r.theme in THEMES ? r.theme : 'corail', mode: ['auto', 'clair', 'sombre'].includes(r.mode) ? r.mode : 'auto', fond: photo(r.fond ?? '') },
+  };
+}
+
+function sauvegarde() {
+  $('dlg').innerHTML = `<h2>${t('sauvegarde')}</h2><p class="petit">${t('sauvIntro')}</p>
+    <p class="pastille alerte" style="display:block">${t('avisMdp')}</p>
+    <form id="fExport"><h3>${t('exporter')}</h3>
+      <label for="e-mdp">${t('mdp')}</label><input id="e-mdp" type="password" minlength="8" required autocomplete="new-password">
+      <label for="e-mdp2">${t('mdp2')}</label><input id="e-mdp2" type="password" minlength="8" required autocomplete="new-password">
+      <div class="boutons"><button class="btn plein">${t('exporter')}</button></div></form>
+    <form id="fImport"><h3>${t('importer')}</h3>
+      <label for="i-fichier">${t('fichier')}</label><input id="i-fichier" type="file" accept=".json,application/json" required>
+      <label for="i-mdp">${t('mdpFichier')}</label><input id="i-mdp" type="password" required autocomplete="off">
+      <div class="boutons"><button class="btn">${t('importer')}</button></div></form>
+    <p id="msgSauv" role="alert"></p>
+    <div class="boutons"><button class="btn" onclick="$('dlg').close()">${t('fermer')}</button></div>`;
+  const msg = (k, ok) => { $('msgSauv').textContent = t(k); $('msgSauv').className = 'pastille ' + (ok ? 'ok' : 'alerte'); $('msgSauv').style.display = 'block'; };
+  // Bloque les boutons pendant le calcul (PBKDF2 prend environ une seconde sur un téléphone).
+  const occupe = async (form, travail) => {
+    const btn = form.querySelector('button'); btn.disabled = true; msg('enCours', true);
+    try { await travail(); } catch (k) { msg(typeof k === 'string' && TXT.fr[k] ? k : 'erreurFichier'); } finally { btn.disabled = false; }
+  };
+  $('fExport').onsubmit = e => { e.preventDefault(); occupe(e.target, async () => {
+    if ($('e-mdp').value !== $('e-mdp2').value) throw 'mdpDifferent';
+    const blob = new Blob([await chiffrer(d, $('e-mdp').value)], { type: 'application/json' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `famillo-${aujourdhui()}.json` });
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    e.target.reset(); msg('exportOk', true);
+  }); };
+  $('fImport').onsubmit = e => { e.preventDefault(); occupe(e.target, async () => {
+    const f = $('i-fichier').files[0];
+    if (!f || f.size > 20e6) throw 'erreurFichier';
+    const nouveau = await dechiffrer(await f.text(), $('i-mdp').value);
+    if (!confirm(t('remplacer'))) { msg('importAnnule', true); return; }
+    const avant = d; d = nouveau;
+    if (!sauver()) { d = avant; throw 'importPlein'; } // tout ou rien : on garde les anciennes données
+    e.target.reset(); afficher(); msg('importOk', true);
+  }); };
   montrer();
 }
 
