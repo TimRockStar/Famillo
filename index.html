@@ -8,9 +8,10 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="preload" href="nunito.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Nunito variable (sous-ensemble latin, accents français compris), dans l'app pour marcher hors ligne. */
+  @font-face { font-family:Nunito; src:url(nunito.woff2) format('woff2'); font-weight:200 1000; font-display:swap; }
   :root {
     --c1:#ff6b6b; --c2:#ffa94d; --mauve:#9775fa;
     --fond:#fff8f0; --carte:#fff; --carte2:#fff4e6; --texte:#2b2140; --doux:#7a7090; --champ:#fffcf8; --bord:#f0e6dc;
@@ -63,7 +64,8 @@
   .apercu[src=""] { display:none; }
   .themes { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
   .themes label { margin:0; text-align:center; font-size:13px; cursor:pointer; }
-  .themes input { display:none; }
+  .themes input { position:absolute; opacity:0; width:1px; height:1px; }
+  .themes input:focus-visible + span { outline:3px solid var(--c1); outline-offset:2px; }
   .themes span { display:block; height:44px; border-radius:14px; border:3px solid transparent; margin-bottom:2px; }
   .themes input:checked + span { border-color:var(--texte); }
   dialog { border:0; border-radius:26px; width:min(92vw,480px); padding:20px; max-height:90vh; background:var(--carte); color:var(--texte); }
@@ -90,7 +92,7 @@
 </header>
 <main id="page"></main>
 <nav id="menu"></nav>
-<dialog id="dlg"></dialog>
+<dialog id="dlg" aria-labelledby="dlgTitre"></dialog>
 
 <script>
 const NOM_APP = 'Famillo';
@@ -184,6 +186,8 @@ const locale = () => lang === 'fr' ? 'fr-CA' : 'en-CA';
 const sauver = () => { try { localStorage.setItem(CLE, JSON.stringify(d)); return true; } catch { alert(t('plein')); return false; } };
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
+// Le titre de chaque fenêtre devient son nom pour le lecteur d'écran (aria-labelledby="dlgTitre").
+const montrer = () => { $('dlg').querySelector('h2').id = 'dlgTitre'; $('dlg').showModal(); };
 const nomAide = () => d.aide.nom || t('laPersonne');
 const nomDe = id => (d.famille.find(p => p.id === id) || {}).nom;
 const dateFr = s => s ? new Date(s).toLocaleString(locale(), { weekday:'long', day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }) : '';
@@ -292,7 +296,7 @@ function afficher() {
   $('perso').textContent = t('personnaliser');
   $('titre').textContent = onglet === 'accueil' ? t('bonjour') : LISTES[onglet].ico + ' ' + t(onglet);
   $('sousTitre').textContent = onglet === 'accueil' ? t('semaineDe')(nomAide()) : '';
-  $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id)}</button>`).join('');
+  $('menu').innerHTML = ONGLETS.map(([id, ico]) => `<button class="${id === onglet ? 'actif' : ''}" ${id === onglet ? 'aria-current="page"' : ''} onclick="onglet='${id}';afficher()"><span>${ico}</span>${t(id)}</button>`).join('');
   $('page').innerHTML = (onglet === 'accueil' ? accueil() : liste(onglet)) + `<footer><div class="boutons">
       <a class="btn" href="mailto:bonjour@lancetonapp.com?subject=${encodeURIComponent(t('sujetIdee'))}&body=${encodeURIComponent(t('corpsIdee'))}">${t('suggerer')}</a>
       <button class="btn" onclick="voirDemandes()">${t('demandes')}</button></div>
@@ -306,7 +310,7 @@ function voirDemandes() {
   $('dlg').innerHTML = `<h2>${t('demandes')}</h2><p class="petit">${t('demandesIntro')}</p>` +
     (DEMANDES.length ? DEMANDES.map(x => `<div class="carte"><span>✅</span><div class="corps">${esc(x[lang === 'fr' ? 0 : 1])}</div></div>`).join('') : `<div class="vide"><span>💡</span>${t('demandesVide')}</div>`) +
     `<div class="boutons"><button class="btn" onclick="$('dlg').close()">${t('fermer')}</button></div>`;
-  $('dlg').showModal();
+  montrer();
 }
 
 function changerLangue() {
@@ -342,16 +346,17 @@ function liste(nom) {
 }
 
 function champ([cle, txt, type], val) {
-  if (type === 'qui') return `<label>${t(txt)}</label><select name="${cle}"><option value="">${t('personne')}</option>` +
+  const lbl = `<label for="f-${cle}">${t(txt)}</label>`; // le for/id fait lire le libellé par le lecteur d'écran
+  if (type === 'qui') return `${lbl}<select id="f-${cle}" name="${cle}"><option value="">${t('personne')}</option>` +
     d.famille.map(p => `<option value="${p.id}" ${p.id === val ? 'selected' : ''}>${esc(p.nom)}</option>`).join('') + `</select>`;
-  if (type === 'textarea') return `<label>${t(txt)}</label><textarea name="${cle}" rows="4">${esc(val)}</textarea>`;
+  if (type === 'textarea') return `${lbl}<textarea id="f-${cle}" name="${cle}" rows="4">${esc(val)}</textarea>`;
   // La photo est réduite dès qu'elle est choisie et gardée dans un champ caché.
-  if (type === 'photo' || type === 'fond') return `<label>${t(txt)}</label><div class="boutons" style="margin:0">
+  if (type === 'photo' || type === 'fond') return `${lbl}<div class="boutons" style="margin:0">
       <img class="apercu" src="${esc(val)}" alt="">
-      <label class="btn" style="margin:0">${t('choisirPhoto')}<input type="file" accept="image/*" hidden onchange="choisirPhoto(this, ${type === 'fond' ? 1000 : 240})"></label>
+      <label class="btn" style="margin:0">${t('choisirPhoto')}<input id="f-${cle}" type="file" accept="image/*" hidden onchange="choisirPhoto(this, ${type === 'fond' ? 1000 : 240})"></label>
       <button type="button" class="btn danger" onclick="choisirPhoto(this)">${t('retirer')}</button>
       <input type="hidden" name="${cle}" value="${esc(val)}"></div>`;
-  return `<label>${t(txt)}</label><input name="${cle}" type="${type || 'text'}" value="${esc(val)}">`;
+  return `${lbl}<input id="f-${cle}" name="${cle}" type="${type || 'text'}" value="${esc(val)}">`;
 }
 
 async function choisirPhoto(el, max) {
@@ -372,7 +377,7 @@ function ouvrir(html, auSubmit) {
     if (!sauver()) { d = JSON.parse(avant); e.preventDefault(); } // trop plein : on annule, rien n'est perdu
     afficher();
   };
-  $('dlg').showModal();
+  montrer();
 }
 
 function formulaire(nom, id) {
@@ -396,10 +401,10 @@ function ficheAide() {
 
 function personnaliser() {
   const r = d.reglages;
-  ouvrir(`<h2>${t('personnaliser')}</h2><label>${t('couleurs')}</label><div class="themes">` +
+  ouvrir(`<h2>${t('personnaliser')}</h2><label id="l-themes">${t('couleurs')}</label><div class="themes" role="radiogroup" aria-labelledby="l-themes">` +
     Object.entries(THEMES).map(([k, [a, b]]) => `<label><input type="radio" name="theme" value="${k}" ${k === r.theme ? 'checked' : ''}>
       <span style="background:linear-gradient(135deg, ${a}, ${b})"></span>${t('th_' + k)}</label>`).join('') + `</div>
-    <label>${t('apparence')}</label><select name="mode">${['auto','clair','sombre'].map(m => `<option value="${m}" ${m === r.mode ? 'selected' : ''}>${t(m)}</option>`).join('')}</select>` +
+    <label for="f-mode">${t('apparence')}</label><select id="f-mode" name="mode">${['auto','clair','sombre'].map(m => `<option value="${m}" ${m === r.mode ? 'selected' : ''}>${t(m)}</option>`).join('')}</select>` +
     champ(['fond', 'fondEcran', 'fond'], r.fond), v => d.reglages = v);
 }
 
@@ -411,7 +416,7 @@ function demander(nom, id) {
     `<div class="carte famille">${avatar(p)}<div class="corps"><b>${esc(p.nom)}</b><div class="boutons">
       <a class="btn plein" href="sms:${encodeURIComponent(p.tel)}?body=${encodeURIComponent(LISTES[nom].message(x, p))}">${t('texter')}</a></div></div></div>`).join('') +
     `${nom === 'meds' ? '' : `<p class="petit">${t('apres')}</p>`}<div class="boutons"><button class="btn" onclick="$('dlg').close()">${t('fermer')}</button></div>`;
-  $('dlg').showModal();
+  montrer();
 }
 
 // Android donne aussi la photo du contact quand elle existe.
