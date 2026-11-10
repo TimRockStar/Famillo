@@ -115,6 +115,8 @@ const TXT = {
     rienSemaine:'Semaine tranquille ! Rien à prévoir.', rien:'Rien pour l\'instant. Appuie sur + pour commencer !',
     nomMed:'Nom du médicament', dose:'Dose (facultatif, ex. : 20 mg)', heure:'Quand le prendre (facultatif)', renouv:'Date de renouvellement (seulement si on ne compte pas les pilules)', renouveler:'Renouveler le',
     qte:'Pilules dans la bouteille neuve (écrit sur l\'étiquette, ex. : 30). Bouteille déjà commencée ? Mets ce que tu comptes aujourd\'hui.', debut:'Date de la première prise (ou aujourd\'hui, si tu viens de compter)', parJour:'Pilules par jour (1, 2, 3…)',
+    noterSymptome:'📝 Noter un symptôme', symptomeQuestion:'Qu\'est-ce que tu remarques aujourd\'hui ? (ex. : étourdie le matin, mal de ventre)',
+    notesMed:'📝 Notes pour le médecin ou le pharmacien (tu peux corriger ou effacer)', symptomeHint:'La date d\'aujourd\'hui s\'ajoute toute seule. Montre ces notes au médecin ou au pharmacien.',
     recompter:'🔢 Recompter', rappelCal:'📅 Rappel', resteQuestion:'Combien de pilules reste-t-il dans le pot ?',
     resteHint:'Le calcul suppose que la dose d\'aujourd\'hui n\'est pas encore prise.',
     avisMed:'Cette app ne remplace pas l\'avis du pharmacien ou du médecin.',
@@ -164,6 +166,8 @@ const TXT = {
     rienSemaine:'A quiet week! Nothing planned.', rien:'Nothing yet. Tap + to get started!',
     nomMed:'Medication name', dose:'Dose (optional, e.g. 20 mg)', heure:'When to take it (optional)', renouv:'Refill date (only if not counting pills)', renouveler:'Refill on',
     qte:'Pills in the new bottle (on the pharmacy label, e.g. 30). Bottle already started? Enter what you count today.', debut:'Date of the first dose (or today, if you just counted)', parJour:'Pills per day (1, 2, 3…)',
+    noterSymptome:'📝 Note a symptom', symptomeQuestion:'What do you notice today? (e.g. dizzy in the morning, stomach ache)',
+    notesMed:'📝 Notes for the doctor or pharmacist (you can fix or erase them)', symptomeHint:'Today\'s date is added automatically. Show these notes to the doctor or pharmacist.',
     recompter:'🔢 Recount', rappelCal:'📅 Reminder', resteQuestion:'How many pills are left in the bottle?',
     resteHint:'The calculation assumes today\'s dose has not been taken yet.',
     avisMed:'This app does not replace the advice of a pharmacist or doctor.',
@@ -260,6 +264,17 @@ function recompter(id) {
   Object.assign($('dlg').querySelector('input'), { required: true, min: 0 });
 }
 
+// Journal de symptômes : chaque note s'ajoute à la fin, avec la date du jour devant.
+function noterSymptome(id) {
+  const m = d.meds.find(x => x.id === id);
+  ouvrir(`<h2>📝 ${esc(m.nom)}</h2><p class="petit">${t('symptomeHint')}</p>` + champ(['symptome', 'symptomeQuestion', 'textarea'], '') +
+    `<p class="petit">${t('avisMed')}</p>`, v => {
+      const note = `${jourFr(aujourdhui())}${lang === 'fr' ? ' :' : ':'} ${v.symptome.trim()}`;
+      m.notes = m.notes ? m.notes + '\n' + note : note;
+    });
+  $('dlg').querySelector('textarea').required = true;
+}
+
 // Le calendrier du téléphone sonne même quand l'app est fermée : on lui donne un rappel 7 jours avant la fin du pot.
 function rappelCalendrier(id) {
   const m = d.meds.find(x => x.id === id), s = suivi(m);
@@ -274,7 +289,7 @@ function rappelCalendrier(id) {
 
 // Chaque liste est décrite une fois ; le même code affiche, ajoute et modifie.
 const LISTES = {
-  meds:    { ico:'💊', champs:[['nom','nomMed'],['parJour','parJour','number'],['debut','debut','date'],['qte','qte','number'],['dose','dose'],['heure','heure'],['renouv','renouv','date']],
+  meds:    { ico:'💊', champs:[['nom','nomMed'],['parJour','parJour','number'],['debut','debut','date'],['qte','qte','number'],['dose','dose'],['heure','heure'],['renouv','renouv','date'],['notes','notesMed','textarea']],
              // Un nouveau pot (autre quantité ou autre début) efface l'ancien décompte.
              avant: (x, v) => { if (x.qte !== v.qte || x.debut !== v.debut) delete x.compte; },
              ligne: m => {
@@ -284,9 +299,11 @@ const LISTES = {
                return `<b>${esc(m.nom)}</b><span class="petit">${esc([m.dose, m.heure].filter(Boolean).join(' · '))}</span>` +
                  (s ? `<span class="petit">🔢 ${t('attendu')(s.attendu)}</span>` : '') +
                  (c ? `<span class="pastille ${c.ecart === 0 ? 'ok' : 'alerte'}">${c.ecart > 0 ? t('oubliees')(jourFr(c.date), c.ecart) : c.ecart < 0 ? t('enMoins')(jourFr(c.date), -c.ecart) : t('ordre')(jourFr(c.date))}</span>` : '') +
-                 (c && c.ecart > 0 ? `<span class="petit">${t('pharmacien')}</span>` : '') + (n ? `<span class="petit">${t('totalOublis')(n)}</span>` : '') + fin;
+                 (c && c.ecart > 0 ? `<span class="petit">${t('pharmacien')}</span>` : '') + (n ? `<span class="petit">${t('totalOublis')(n)}</span>` : '') + fin +
+                 (m.notes ? `<span class="petit" style="white-space:pre-wrap;margin-top:6px">📝 ${esc(m.notes)}</span>` : '');
              },
-             extra: m => suivi(m) ? `<button class="btn" onclick="recompter('${m.id}')">${t('recompter')}</button><button class="btn" onclick="rappelCalendrier('${m.id}')">${t('rappelCal')}</button>` : '',
+             extra: m => `<button class="btn" onclick="noterSymptome('${m.id}')">${t('noterSymptome')}</button>` +
+               (suivi(m) ? `<button class="btn" onclick="recompter('${m.id}')">${t('recompter')}</button><button class="btn" onclick="rappelCalendrier('${m.id}')">${t('rappelCal')}</button>` : ''),
              message: (m, p) => t('msgMed')(p.nom, nomAide(), m.nom, suivi(m)?.jours) },
   rdv:     { ico:'📅', champs:[['quoi','quoiRdv'],['quand','quand','datetime-local'],['lieu','lieu'],['qui','qui','qui']],
              ligne: r => `<b>${esc(r.quoi)}</b><span class="petit">${dateFr(r.quand)}${r.lieu ? '<br>📍 ' + esc(r.lieu) : ''}</span>` + qui(r),
@@ -402,7 +419,7 @@ function valider(s) {
   const r = objet(s.reglages ?? {});
   return {
     aide: copie(objet(s.aide ?? {}), ['nom', 'photo', 'medecin', 'ramq', 'notes'], { photo }),
-    meds: liste(s.meds, ['nom', 'parJour', 'debut', 'qte', 'dose', 'heure', 'renouv', 'compte', 'oublis'], {
+    meds: liste(s.meds, ['nom', 'parJour', 'debut', 'qte', 'dose', 'heure', 'renouv', 'compte', 'oublis', 'notes'], {
       compte: c => { objet(c); return { reste: nombre(c.reste), date: texte(c.date, 10), ecart: nombre(c.ecart) }; },
       oublis: v => typeof v === 'number' ? nombre(v) : texte(v, 10) }),
     rdv: liste(s.rdv, ['quoi', 'quand', 'lieu', 'qui'], { qui }),
