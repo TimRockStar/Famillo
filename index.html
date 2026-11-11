@@ -94,6 +94,7 @@
 <main id="page"></main>
 <nav id="menu"></nav>
 <dialog id="dlg" aria-labelledby="dlgTitre"></dialog>
+<dialog id="verrou" aria-labelledby="verrouTitre"></dialog>
 
 <script>
 const NOM_APP = 'Famillo';
@@ -140,6 +141,12 @@ const TXT = {
     fondEcran:'Photo d\'arrière-plan (en haut)', choisirPhoto:'📷 Choisir une photo', retirer:'Retirer',
     plein:'Le téléphone manque de place pour les photos. Retire une photo ou choisis-en une plus petite.',
     th_corail:'Corail', th_ocean:'Océan', th_foret:'Forêt', th_lavande:'Lavande', th_soleil:'Soleil', th_baie:'Petits fruits',
+    achatTitre:'Débloquer Famillo', essaiFini:'Ton essai gratuit de 7 jours est terminé. Tes données sont toujours sur ton téléphone : rien n\'est perdu.',
+    essaiRestant:n => n > 1 ? `Essai gratuit : ${n} jours restants` : n === 1 ? 'Essai gratuit : 1 jour restant' : 'Essai gratuit : dernier jour',
+    achatTexte:'Un seul paiement, pour toujours. Pas d\'abonnement. 14,99 $ pendant l\'essai, 19,99 $ après.', achatBtn:'Acheter Famillo (paiement unique)', debloquer:'🔓 Débloquer',
+    dejaAchete:'Déjà acheté ? Entre le courriel utilisé lors du paiement.', verifier:'Vérifier mon achat', courriel:'courriel@exemple.com',
+    verifEnCours:'Vérification…', verifOk:'✅ Famillo est débloqué sur cet appareil. Merci !', verifNon:'Aucun achat trouvé pour ce courriel. Vérifie l\'adresse utilisée lors du paiement.',
+    verifErreur:'Impossible de vérifier pour le moment. Réessaie plus tard.', verifVide:'Entre ton courriel.', activerApp:'Activer avec mon courriel', debloqueMsg:'✅ Famillo est débloqué',
     suggerer:'💡 Suggérer une idée', demandes:'✅ Vous l\'avez demandé', propulse:'Propulsé par', confid:'Confidentialité',
     sujetIdee:'Famillo : une idée', corpsIdee:'Bonjour ! Ce serait le fun si Famillo pouvait : ',
     demandesIntro:'Les idées des utilisateurs qu\'on a ajoutées. On lit toutes les suggestions !',
@@ -191,6 +198,12 @@ const TXT = {
     fondEcran:'Background photo (top)', choisirPhoto:'📷 Choose a photo', retirer:'Remove',
     plein:'The phone is out of room for photos. Remove a photo or pick a smaller one.',
     th_corail:'Coral', th_ocean:'Ocean', th_foret:'Forest', th_lavande:'Lavender', th_soleil:'Sunshine', th_baie:'Berries',
+    achatTitre:'Unlock Famillo', essaiFini:'Your 7-day free trial is over. Your data is still on your phone: nothing is lost.',
+    essaiRestant:n => n > 1 ? `Free trial: ${n} days left` : n === 1 ? 'Free trial: 1 day left' : 'Free trial: last day',
+    achatTexte:'One payment, forever. No subscription. CA$14.99 during the trial, CA$19.99 after.', achatBtn:'Buy Famillo (one-time payment)', debloquer:'🔓 Unlock',
+    dejaAchete:'Already bought it? Enter the email you used when paying.', verifier:'Check my purchase', courriel:'email@example.com',
+    verifEnCours:'Checking…', verifOk:'✅ Famillo is unlocked on this device. Thank you!', verifNon:'No purchase found for this email. Check the address you used when paying.',
+    verifErreur:'Could not check right now. Please try again later.', verifVide:'Enter your email.', activerApp:'Activate with my email', debloqueMsg:'✅ Famillo is unlocked',
     suggerer:'💡 Suggest an idea', demandes:'✅ You asked, we did it', propulse:'Powered by', confid:'Privacy',
     sujetIdee:'Famillo: an idea', corpsIdee:'Hi! It would be great if Famillo could: ',
     demandesIntro:'Ideas from users that we added. We read every suggestion!',
@@ -212,6 +225,50 @@ const TXT = {
   },
 };
 const t = k => TXT[lang][k];
+// ---- Essai gratuit de 7 jours, puis achat unique (14,99 $ au lancement, 19,99 $ ensuite) ----
+// L'achat se fait sur famillo.ca (Stripe). Dans les apps Google Play / App Store : aucun bouton de paiement,
+// seulement l'activation par courriel (règles des boutiques).
+const LIEN_ACHAT_ESSAI = 'https://buy.stripe.com/aFa5kDcHvex00mfdxx5gc07'; // 14,99 $ : pendant l'essai
+const LIEN_ACHAT_APRES = 'https://buy.stripe.com/4gM28rdLz3Smc4Xall5gc08'; // 19,99 $ : après l'essai
+const lienAchat = () => joursRestants() > 0 ? LIEN_ACHAT_ESSAI : LIEN_ACHAT_APRES;
+const ADRESSE_ACHAT = 'https://angloshift-premium.smartgrocer.workers.dev/check-famillo';
+const ESSAI_JOURS = 7;
+const dansApp = /;\s*wv\)/.test(navigator.userAgent) || (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) || (document.referrer || '').indexOf('android-app://') === 0;
+try { if (!localStorage.getItem(CLE + '-debut')) localStorage.setItem(CLE + '-debut', String(Date.now())); } catch {}
+const debloque = () => { try { return !!JSON.parse(localStorage.getItem(CLE + '-achat') || 'null')?.email; } catch { return false; } };
+const joursRestants = () => { let a = Date.now(); try { a = Number(localStorage.getItem(CLE + '-debut')) || Date.now(); } catch {} return Math.max(0, ESSAI_JOURS - Math.floor((Date.now() - a) / 86400000)); };
+const verrouille = () => !debloque() && joursRestants() <= 0;
+async function verifierAchat(email) {
+  const r = await fetch(ADRESSE_ACHAT + '?email=' + encodeURIComponent(email));
+  const j = await r.json();
+  if (!r.ok && j.erreur !== 'email') throw new Error('serveur');
+  return j.achat === true;
+}
+function ecranAchat() {
+  const force = verrouille(), v = $('verrou');
+  v.innerHTML = `<h2 id="verrouTitre">🔓 ${t('achatTitre')}</h2>` +
+    (force ? `<p>${t('essaiFini')}</p>` : '') +
+    (dansApp ? '' : `<p>${t('achatTexte')}</p><div class="boutons"><a class="btn plein" href="${lienAchat()}" target="_blank" rel="noopener">${t('achatBtn')}</a></div><hr style="border:none;border-top:1px solid #8884;margin:14px 0">`) +
+    `<p class="petit">${dansApp ? t('activerApp') + '. ' : ''}${t('dejaAchete')}</p>
+     <input type="email" id="achatEmail" autocomplete="email" placeholder="${t('courriel')}" style="width:100%;box-sizing:border-box">
+     <div class="boutons" style="margin-top:10px"><button class="btn plein" id="achatVerifier">${t('verifier')}</button>${force ? '' : `<button class="btn" id="achatFermer">${t('fermer')}</button>`}</div>
+     <p class="petit" id="achatMsg" role="status" style="min-height:1.2em"></p>`;
+  v.querySelector('h2').id = 'verrouTitre';
+  $('achatVerifier').onclick = async () => {
+    const mail = $('achatEmail').value.trim().toLowerCase(), msg = $('achatMsg');
+    if (!mail) { msg.textContent = t('verifVide'); return; }
+    msg.textContent = t('verifEnCours');
+    try {
+      if (await verifierAchat(mail)) {
+        try { localStorage.setItem(CLE + '-achat', JSON.stringify({ email: mail, quand: Date.now() })); } catch {}
+        msg.textContent = t('verifOk'); setTimeout(() => { v.close(); afficher(); }, 1200);
+      } else msg.textContent = t('verifNon');
+    } catch { msg.textContent = t('verifErreur'); }
+  };
+  if (!force) $('achatFermer').onclick = () => v.close();
+  if (!v.open) v.showModal();
+}
+
 const locale = () => lang === 'fr' ? 'fr-CA' : 'en-CA';
 
 const sauver = () => { try { localStorage.setItem(CLE, JSON.stringify(d)); return true; } catch { alert(t('plein')); return false; } };
@@ -346,6 +403,7 @@ function afficher() {
       <button class="btn" onclick="sauvegarde()">${t('sauvegarde')}</button>
       <a class="btn" href="mailto:bonjour@lancetonapp.com?subject=${encodeURIComponent(t('sujetIdee'))}&body=${encodeURIComponent(t('corpsIdee'))}">${t('suggerer')}</a>
       <button class="btn" onclick="voirDemandes()">${t('demandes')}</button></div>
+    ${debloque() ? '' : `<p><b>${t('essaiRestant')(joursRestants())}</b> <button class="btn" onclick="ecranAchat()">${t('debloquer')}</button></p>`}
     <p>${t('propulse')} <a href="https://lancetonapp.com" target="_blank" rel="noopener">Lance ton app</a> · <a href="confidentialite.html${lang === 'en' ? '#en' : ''}">${t('confid')}</a></p></footer>`;
 }
 
@@ -585,7 +643,9 @@ async function depuisContacts() {
   } catch { /* la personne a annulé */ }
 }
 
+$('verrou').addEventListener('cancel', e => { if (verrouille()) e.preventDefault(); });
 afficher();
+if (verrouille()) ecranAchat();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
