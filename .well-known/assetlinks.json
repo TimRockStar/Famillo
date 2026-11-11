@@ -4,7 +4,8 @@
     "namespace": "android_app",
     "package_name": "ca.famillo.app",
     "sha256_cert_fingerprints": [
-      "E3:4D:CF:C4:2A:1A:E8:BF:3B:BA:92:BF:01:6B:F6:E5:06:7E:05:0A:46:92:F9:51:31:5A:40:5E:2E:79:9D:2B"
+      "E3:4D:CF:C4:2A:1A:E8:BF:3B:BA:92:BF:01:6B:F6:E5:06:7E:05:0A:46:92:F9:51:31:5A:40:5E:2E:79:9D:2B",
+      "79:E1:6D:48:BE:DF:AC:AB:7F:6D:C9:25:65:11:BA:80:57:10:90:89:E6:01:BC:9D:08:A3:09:86:04:36:56:44"
     ]
   }
 }]
